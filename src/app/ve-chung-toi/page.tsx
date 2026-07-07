@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { Reveal } from "@/components/motion/reveal";
 import { KeptVideo } from "@/components/motion/kept-video";
 import { asset } from "@/lib/asset";
@@ -49,65 +48,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Video stop-motion: đứng giữa, không khung. Mask + multiply phải nằm CÙNG một lớp —
-          nếu mask đặt ở div tổ tiên riêng sẽ tạo stacking context cô lập blend (nền trắng chói). */}
-      <section className="mx-auto max-w-[1360px] px-5 md:px-10 pb-24">
-        <Reveal
-          className="relative mx-auto"
-          style={{
-            width: "min(76vw, 380px)",
-            aspectRatio: "9 / 16",
-            maxHeight: "82vh",
-          }}
-        >
-          <div
-            className="absolute inset-0 overflow-hidden"
-            style={{
-              mixBlendMode: "multiply",
-              WebkitMaskImage:
-                "linear-gradient(to bottom, transparent 0%, #000 18%, #000 86%, transparent 100%), linear-gradient(to right, transparent 0%, #000 12%, #000 88%, transparent 100%)",
-              WebkitMaskComposite: "source-in",
-              maskImage:
-                "linear-gradient(to bottom, transparent 0%, #000 18%, #000 86%, transparent 100%), linear-gradient(to right, transparent 0%, #000 12%, #000 88%, transparent 100%)",
-              maskComposite: "intersect",
-            }}
-          >
-            <KeptVideo
-              src={asset("/bunbun-stopmotion.mp4")}
-              poster={asset("/stopmotion-poster.png")}
-              ariaLabel="Bunbun Burger — clip stop-motion Made in Huế"
-              style={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                width: "calc(100% * 16 / 9)",
-                height: "calc(100% * 9 / 16)",
-                transform: "translate(-50%, -50%) rotate(90deg)",
-                objectFit: "cover",
-                display: "block",
-                filter: "brightness(1.08)",
-              }}
-            />
-          </div>
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 z-[2] h-[20%]"
-            style={{
-              background:
-                "linear-gradient(to bottom, #FBF7F2 85%, rgba(251,247,242,0))",
-            }}
-          />
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-[14%]"
-            style={{
-              background:
-                "linear-gradient(to top, #FBF7F2 82%, rgba(251,247,242,0))",
-            }}
-          />
-        </Reveal>
-      </section>
-
       <section className="mx-auto max-w-[1360px] px-5 md:px-10 pb-[90px]">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-[1fr_2fr]">
           <Reveal className="border-t pt-2 text-[11px] tracking-[0.32em] text-stone uppercase [border-color:rgba(25,20,16,0.15)]">
@@ -129,14 +69,40 @@ export default function AboutPage() {
                 cách Huế: đậm đà mà tinh tế, giản dị mà không giản đơn.
               </Reveal>
             </div>
-            <Reveal className="relative aspect-[2/3] overflow-hidden rounded bg-placeholder">
-              <Image
-                src={asset("/about-spread-v2.png")}
-                alt="Bunbun Burger — ảnh mâm sản phẩm"
-                fill
-                className="object-cover"
-                sizes="(min-width: 768px) 33vw, 100vw"
-              />
+            {/* Video stop-motion thay ảnh tĩnh: multiply + mask ellipse (một lớp, cùng chỗ)
+                cho nền video tan vào màu giấy không còn cạnh; negative margin cho khối
+                tràn nhẹ ra ngoài cột để video và nền trang cảm giác là một. */}
+            <Reveal
+              className="relative mx-auto w-[min(88vw,400px)] md:-mx-8 md:-my-10 md:w-auto"
+              style={{ aspectRatio: "9 / 14" }}
+            >
+              <div
+                className="absolute inset-0 overflow-hidden"
+                style={{
+                  mixBlendMode: "multiply",
+                  WebkitMaskImage:
+                    "radial-gradient(ellipse 74% 62% at 50% 50%, #000 48%, rgba(0,0,0,0) 96%)",
+                  maskImage:
+                    "radial-gradient(ellipse 74% 62% at 50% 50%, #000 48%, rgba(0,0,0,0) 96%)",
+                }}
+              >
+                <KeptVideo
+                  src={asset("/bunbun-stopmotion.mp4")}
+                  poster={asset("/stopmotion-poster.png")}
+                  ariaLabel="Bunbun Burger — clip stop-motion Made in Huế"
+                  style={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    width: "calc(100% * 16 / 9)",
+                    height: "calc(100% * 9 / 16)",
+                    transform: "translate(-50%, -50%) rotate(90deg)",
+                    objectFit: "cover",
+                    display: "block",
+                    filter: "brightness(1.08)",
+                  }}
+                />
+              </div>
             </Reveal>
           </div>
         </div>
