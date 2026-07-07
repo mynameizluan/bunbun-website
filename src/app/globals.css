@@ -1,26 +1,92 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-paper: #fbf7f2;
+  --color-ink: #191410;
+  --color-body: #5a5049;
+  --color-ember: #ff5a1f;
+  --color-ember-deep: #e5431a;
+  --color-stone: #9a8d7f;
+  --color-stone-dark: #8a7f76;
+  --color-stone-on-dark: #b5aaa0;
+  --color-stone-on-dark-2: #b3a798;
+  --color-placeholder: #e9e0d4;
+  --color-placeholder-2: #efe7da;
+  --color-video-mask: #f3f3f3;
+
+  --hairline: rgba(25, 20, 16, 0.15);
+  --hairline-soft: rgba(25, 20, 16, 0.12);
+  --hairline-faint: rgba(25, 20, 16, 0.08);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-paper: var(--color-paper);
+  --color-ink: var(--color-ink);
+  --color-body: var(--color-body);
+  --color-ember: var(--color-ember);
+  --color-ember-deep: var(--color-ember-deep);
+  --color-stone: var(--color-stone);
+  --color-stone-dark: var(--color-stone-dark);
+  --color-stone-on-dark: var(--color-stone-on-dark);
+  --color-stone-on-dark-2: var(--color-stone-on-dark-2);
+  --color-placeholder: var(--color-placeholder);
+  --color-placeholder-2: var(--color-placeholder-2);
+  --color-video-mask: var(--color-video-mask);
+
+  --font-display: var(--font-jakarta), sans-serif;
+  --font-body: var(--font-vietnam), sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body), sans-serif;
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-ember);
+  color: #fff;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+h1,
+h2 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--color-ember);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+@keyframes bbmarquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
