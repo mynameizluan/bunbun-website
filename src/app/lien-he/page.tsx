@@ -84,7 +84,7 @@ function VenueBlock({ venue }: { venue: typeof VENUE_1 }) {
 
 export default function ContactPage() {
   return (
-    <main className="mx-auto max-w-[1360px] px-10 pt-[172px] pb-[120px]">
+    <main className="mx-auto max-w-[1360px] px-5 md:px-10 pt-[128px] md:pt-[172px] pb-[120px]">
       <Reveal className="mb-20 grid grid-cols-1 items-center gap-11 md:grid-cols-[0.82fr_1.18fr]">
         <div className="relative aspect-[4/5] overflow-hidden rounded bg-placeholder">
           <Image

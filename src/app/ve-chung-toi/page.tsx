@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <main>
-      <section className="mx-auto max-w-[1360px] px-10 pt-[172px] pb-[90px]">
+      <section className="mx-auto max-w-[1360px] px-5 md:px-10 pt-[128px] md:pt-[172px] pb-[90px]">
         <Reveal className="mb-7 flex items-center gap-3.5">
           <span className="h-1.5 w-1.5 rounded-full bg-ember" />
           <span className="text-[11px] tracking-[0.32em] uppercase">
@@ -49,7 +49,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-[1360px] px-10 pb-24">
+      <section className="mx-auto max-w-[1360px] px-5 md:px-10 pb-24">
         <Reveal
           className="relative mx-auto overflow-hidden rounded-md bg-[#F4F1EC] shadow-[0_44px_90px_-34px_rgba(25,20,16,0.42)]"
           style={{
@@ -92,7 +92,7 @@ export default function AboutPage() {
         </Reveal>
       </section>
 
-      <section className="mx-auto max-w-[1360px] px-10 pb-[90px]">
+      <section className="mx-auto max-w-[1360px] px-5 md:px-10 pb-[90px]">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-[1fr_2fr]">
           <Reveal className="border-t pt-2 text-[11px] tracking-[0.32em] text-stone uppercase [border-color:rgba(25,20,16,0.15)]">
             02 — Made in Huế
@@ -126,7 +126,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-[1360px] px-10 pb-[150px]">
+      <section className="mx-auto max-w-[1360px] px-5 md:px-10 pb-[150px]">
         <div className="grid grid-cols-1 gap-6 border-t pt-11 [border-color:rgba(25,20,16,0.15)] md:grid-cols-3">
           <Reveal>
             <div className="font-display text-[clamp(40px,5vw,64px)] font-light tracking-[-0.03em]">

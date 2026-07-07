@@ -28,7 +28,7 @@ export function MenuClient() {
   );
 
   return (
-    <main className="mx-auto max-w-[1360px] px-10 pt-[172px] pb-[120px]">
+    <main className="mx-auto max-w-[1360px] px-5 md:px-10 pt-[128px] md:pt-[172px] pb-[120px]">
       <Reveal className="mb-16">
         <div className="mb-8 flex items-center gap-3.5">
           <span className="h-1.5 w-1.5 rounded-full bg-ember" />
@@ -42,7 +42,7 @@ export function MenuClient() {
       </Reveal>
 
       <div
-        className="sticky top-[74px] z-50 mb-10 flex flex-wrap gap-x-[26px] gap-y-2 border-b bg-paper py-4 [border-color:rgba(25,20,16,0.15)]"
+        className="sticky top-[64px] z-50 mb-10 -mx-5 flex gap-x-[22px] overflow-x-auto border-b bg-paper px-5 py-4 [border-color:rgba(25,20,16,0.15)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:top-[74px] md:mx-0 md:flex-wrap md:gap-x-[26px] md:gap-y-2 md:overflow-visible md:px-0"
       >
         {chips.map((chip) => {
           const active = chip.id === filter;
@@ -50,7 +50,7 @@ export function MenuClient() {
             <button
               key={chip.id}
               onClick={() => setFilter(chip.id)}
-              className="border-b bg-transparent py-1.5 font-body text-[13px] tracking-[0.12em] uppercase transition-colors duration-[250ms]"
+              className="shrink-0 border-b bg-transparent py-1.5 font-body text-[13px] tracking-[0.12em] whitespace-nowrap uppercase transition-colors duration-[250ms]"
               style={{
                 borderColor: active ? "var(--color-ember)" : "transparent",
                 color: active ? "var(--color-ember)" : "var(--color-ink)",
@@ -65,7 +65,7 @@ export function MenuClient() {
 
       {groups.map((group) => (
         <Reveal key={group.id} className="mb-18">
-          <div className="grid grid-cols-1 items-start gap-12 md:grid-cols-[1fr_2fr]">
+          <div className="grid grid-cols-1 items-start gap-5 md:grid-cols-[1fr_2fr] md:gap-12">
             <div className="md:sticky md:top-[150px]">
               <h2 className="mb-2.5 font-display text-[clamp(24px,2.8vw,36px)] font-normal tracking-[-0.02em]">
                 {group.name}
@@ -81,9 +81,9 @@ export function MenuClient() {
                 return (
                   <div
                     key={item.name}
-                    className="grid grid-cols-[88px_1fr_auto] items-center gap-[22px] border-b px-0.5 py-5 [border-color:rgba(25,20,16,0.12)]"
+                    className="grid grid-cols-[64px_1fr_auto] items-center gap-3.5 border-b px-0.5 py-5 sm:grid-cols-[88px_1fr_auto] sm:gap-[22px] [border-color:rgba(25,20,16,0.12)]"
                   >
-                    <div className="relative h-[88px] w-[88px] overflow-hidden rounded bg-placeholder">
+                    <div className="relative h-[64px] w-[64px] overflow-hidden rounded bg-placeholder sm:h-[88px] sm:w-[88px]">
                       {imgSrc ? (
                         <Image
                           src={imgSrc}

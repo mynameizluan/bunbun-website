@@ -33,7 +33,7 @@ export default function HomePage() {
   return (
     <main>
       {/* ---------- HERO ---------- */}
-      <section className="mx-auto max-w-[1360px] px-10 pt-[172px]">
+      <section className="mx-auto max-w-[1360px] px-5 md:px-10 pt-[128px] md:pt-[172px]">
         <Reveal delay={0} className="mb-9 flex items-center gap-3.5">
           <span className="h-1.5 w-1.5 rounded-full bg-ember" />
           <span className="text-[11px] font-normal tracking-[0.32em] text-ink uppercase">
@@ -99,7 +99,7 @@ export default function HomePage() {
       <Marquee />
 
       {/* ---------- PHILOSOPHY ---------- */}
-      <section className="mx-auto max-w-[1360px] px-10 pt-[110px] pb-[120px]">
+      <section className="mx-auto max-w-[1360px] px-5 md:px-10 pt-[64px] pb-[72px] md:pt-[110px] md:pb-[120px]">
         <div className="grid grid-cols-1 items-start gap-12 md:grid-cols-[1fr_2fr]">
           <Reveal className="pt-2.5 text-[11px] tracking-[0.32em] text-stone uppercase">
             01 — Triết lý
@@ -123,7 +123,7 @@ export default function HomePage() {
       </section>
 
       {/* ---------- SIGNATURE ---------- */}
-      <section className="mx-auto max-w-[1360px] px-10 pb-[60px]">
+      <section className="mx-auto max-w-[1360px] px-5 md:px-10 pb-[60px]">
         <Reveal className="mb-13 flex items-baseline justify-between gap-6 border-t pt-[22px] [border-color:rgba(25,20,16,0.15)]">
           <div className="text-[11px] tracking-[0.32em] text-stone uppercase">
             02 — Món signature
@@ -173,7 +173,7 @@ export default function HomePage() {
       </section>
 
       {/* ---------- QUOTE BAND ---------- */}
-      <section className="mt-20 bg-ink px-10 py-[130px] text-paper">
+      <section className="mt-20 bg-ink px-5 py-[80px] md:px-10 md:py-[130px] text-paper">
         <div className="mx-auto grid max-w-[1360px] grid-cols-1 gap-12 md:grid-cols-[1fr_2fr]">
           <Reveal className="pt-2.5 text-[11px] tracking-[0.32em] text-stone-dark uppercase">
             03 — Made in Huế
@@ -193,7 +193,7 @@ export default function HomePage() {
       </section>
 
       {/* ---------- CHANNELS + HOURS ---------- */}
-      <section className="mx-auto max-w-[1360px] px-10 py-[120px]">
+      <section className="mx-auto max-w-[1360px] px-5 py-[72px] md:px-10 md:py-[120px]">
         <div className="grid grid-cols-1 gap-16 md:grid-cols-2">
           <div>
             <Reveal className="mb-9 border-t pt-[22px] text-[11px] tracking-[0.32em] text-stone uppercase [border-color:rgba(25,20,16,0.15)]">
@@ -303,7 +303,7 @@ export default function HomePage() {
       </section>
 
       {/* ---------- MENU TEASER ---------- */}
-      <section className="mx-auto max-w-[1360px] px-10 pb-[140px]">
+      <section className="mx-auto max-w-[1360px] px-5 md:px-10 pb-[96px] md:pb-[140px]">
         <Reveal className="mb-11 border-t pt-[22px] text-[11px] tracking-[0.32em] text-stone uppercase [border-color:rgba(25,20,16,0.15)]">
           06 — Thực đơn
         </Reveal>
@@ -312,7 +312,7 @@ export default function HomePage() {
             <Reveal key={g.id}>
               <Link
                 href="/menu"
-                className="grid grid-cols-[60px_1fr_auto] items-baseline gap-6 border-b px-0.5 py-6 transition-[padding] duration-[250ms] hover:pl-3 [border-color:rgba(25,20,16,0.12)]"
+                className="grid grid-cols-[40px_1fr_auto] md:grid-cols-[60px_1fr_auto] items-baseline gap-6 border-b px-0.5 py-6 transition-[padding] duration-[250ms] hover:pl-3 [border-color:rgba(25,20,16,0.12)]"
               >
                 <span className="text-[11px] tracking-[0.2em] text-stone">
                   {g.idx}

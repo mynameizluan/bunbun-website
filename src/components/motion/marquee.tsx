@@ -30,7 +30,7 @@ export function Marquee() {
   return (
     <section
       aria-hidden="true"
-      className="mt-[120px] overflow-hidden border-y py-6"
+      className="mt-[72px] md:mt-[120px] overflow-hidden border-y py-6"
       style={{ borderColor: "var(--hairline)" }}
     >
       <div className="flex w-max animate-[bbmarquee_30s_linear_infinite] motion-reduce:animate-none">

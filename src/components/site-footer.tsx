@@ -20,7 +20,7 @@ const exploreLinks = [
 
 export function SiteFooter() {
   return (
-    <footer className="mt-10 bg-ink px-10 pt-[90px] pb-12 text-paper">
+    <footer className="mt-10 bg-ink px-5 md:px-10 pt-[90px] pb-12 text-paper">
       <div className="mx-auto max-w-[1360px]">
         <Reveal
           className="mb-11 flex flex-wrap items-end justify-between gap-8 border-b pb-14 [border-color:rgba(251,247,242,0.15)]"
