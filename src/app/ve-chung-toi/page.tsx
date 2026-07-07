@@ -50,8 +50,9 @@ export default function AboutPage() {
       </section>
 
       <section className="mx-auto max-w-[1360px] px-5 md:px-10 pb-24">
+        {/* Video nền trắng chìm vào màu giấy nhờ mix-blend-mode: multiply — không khung, không bóng */}
         <Reveal
-          className="relative mx-auto overflow-hidden rounded-md bg-[#F4F1EC] shadow-[0_44px_90px_-34px_rgba(25,20,16,0.42)]"
+          className="relative mx-auto overflow-hidden"
           style={{
             width: "min(84vw, 432px)",
             aspectRatio: "9 / 16",
@@ -71,6 +72,7 @@ export default function AboutPage() {
               transform: "translate(-50%, -50%) rotate(90deg)",
               objectFit: "cover",
               display: "block",
+              mixBlendMode: "multiply",
             }}
           />
           <div
@@ -78,7 +80,7 @@ export default function AboutPage() {
             className="pointer-events-none absolute inset-x-0 top-0 z-[2] h-[20%]"
             style={{
               background:
-                "linear-gradient(to bottom, #f3f3f3 85%, rgba(243,243,243,0))",
+                "linear-gradient(to bottom, #FBF7F2 85%, rgba(251,247,242,0))",
             }}
           />
           <div
@@ -86,7 +88,7 @@ export default function AboutPage() {
             className="pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-[14%]"
             style={{
               background:
-                "linear-gradient(to top, #f3f3f3 82%, rgba(243,243,243,0))",
+                "linear-gradient(to top, #FBF7F2 82%, rgba(251,247,242,0))",
             }}
           />
         </Reveal>
