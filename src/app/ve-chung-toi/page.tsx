@@ -73,7 +73,7 @@ export default function AboutPage() {
                 cho nền video tan vào màu giấy không còn cạnh; negative margin cho khối
                 tràn nhẹ ra ngoài cột để video và nền trang cảm giác là một. */}
             <Reveal
-              className="relative mx-auto w-[min(88vw,400px)] md:-mx-8 md:-my-10 md:w-auto"
+              className="relative mx-auto -my-6 w-[min(96vw,420px)] md:-mx-8 md:-my-10 md:w-auto"
               style={{ aspectRatio: "9 / 14" }}
             >
               <div
