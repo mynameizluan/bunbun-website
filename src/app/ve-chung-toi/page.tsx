@@ -49,58 +49,92 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* 02 — Bếp Bunbun: video stop-motion nằm trong nhịp 2 cột editorial như các mục khác.
+          Nền video tan vào màu giấy: brightness đẩy xám #f3f3f3 lên trắng → multiply biến trắng
+          thành màu giấy; alpha mask feather 4 rìa nên không còn ranh giới khối video. */}
       <section className="mx-auto max-w-[1360px] px-5 md:px-10 pb-24">
-        {/* Video nền trắng chìm vào màu giấy nhờ mix-blend-mode: multiply — không khung, không bóng */}
-        <Reveal
-          className="relative mx-auto overflow-hidden"
-          style={{
-            width: "min(84vw, 432px)",
-            aspectRatio: "9 / 16",
-            maxHeight: "86vh",
-          }}
-        >
-          <KeptVideo
-            src={asset("/bunbun-stopmotion.mp4")}
-            poster={asset("/stopmotion-poster.png")}
-            ariaLabel="Bunbun Burger — clip stop-motion Made in Huế"
-            style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              width: "calc(100% * 16 / 9)",
-              height: "calc(100% * 9 / 16)",
-              transform: "translate(-50%, -50%) rotate(90deg)",
-              objectFit: "cover",
-              display: "block",
-              // brightness đẩy nền xám #f3f3f3 của video lên trắng tinh,
-              // rồi multiply biến trắng thành đúng màu giấy → nền video tan hẳn vào trang
-              filter: "brightness(1.06)",
-              mixBlendMode: "multiply",
-            }}
-          />
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 z-[2] h-[20%]"
-            style={{
-              background:
-                "linear-gradient(to bottom, #FBF7F2 85%, rgba(251,247,242,0))",
-            }}
-          />
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-[14%]"
-            style={{
-              background:
-                "linear-gradient(to top, #FBF7F2 82%, rgba(251,247,242,0))",
-            }}
-          />
-        </Reveal>
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-[1fr_2fr] md:gap-12">
+          <Reveal className="border-t pt-[22px] text-[11px] tracking-[0.32em] text-stone uppercase [border-color:rgba(25,20,16,0.15)]">
+            02 — Bếp Bunbun
+          </Reveal>
+          <div className="grid grid-cols-1 items-center gap-10 md:grid-cols-[minmax(0,380px)_1fr] md:gap-14">
+            <Reveal
+              className="relative mx-auto w-full max-w-[380px] md:mx-0"
+              style={{ aspectRatio: "9 / 16", maxHeight: "82vh" }}
+            >
+              <div
+                className="absolute inset-0 overflow-hidden"
+                style={{
+                  WebkitMaskImage:
+                    "linear-gradient(to bottom, transparent 0%, #000 18%, #000 86%, transparent 100%)",
+                  maskImage:
+                    "linear-gradient(to bottom, transparent 0%, #000 18%, #000 86%, transparent 100%)",
+                }}
+              >
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    WebkitMaskImage:
+                      "linear-gradient(to right, transparent 0%, #000 12%, #000 88%, transparent 100%)",
+                    maskImage:
+                      "linear-gradient(to right, transparent 0%, #000 12%, #000 88%, transparent 100%)",
+                  }}
+                >
+                  <KeptVideo
+                    src={asset("/bunbun-stopmotion.mp4")}
+                    poster={asset("/stopmotion-poster.png")}
+                    ariaLabel="Bunbun Burger — clip stop-motion Made in Huế"
+                    style={{
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      width: "calc(100% * 16 / 9)",
+                      height: "calc(100% * 9 / 16)",
+                      transform: "translate(-50%, -50%) rotate(90deg)",
+                      objectFit: "cover",
+                      display: "block",
+                      filter: "brightness(1.08)",
+                      mixBlendMode: "multiply",
+                    }}
+                  />
+                </div>
+              </div>
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-x-0 top-0 z-[2] h-[20%]"
+                style={{
+                  background:
+                    "linear-gradient(to bottom, #FBF7F2 85%, rgba(251,247,242,0))",
+                }}
+              />
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-[14%]"
+                style={{
+                  background:
+                    "linear-gradient(to top, #FBF7F2 82%, rgba(251,247,242,0))",
+                }}
+              />
+            </Reveal>
+            <div>
+              <Reveal className="mb-6 max-w-[24ch] font-display text-[clamp(24px,3vw,38px)] leading-[1.35] font-normal tracking-[-0.015em]">
+                Từng lớp,{" "}
+                <span className="text-ember italic">từng nhịp.</span>
+              </Reveal>
+              <Reveal className="max-w-[40ch] text-base leading-[1.85] text-body">
+                Một chiếc Bunbun thành hình trong bếp mở — bánh, rau, bò
+                nướng, xốt — từng lớp xếp lên nhau, chậm rãi như cách chúng
+                tôi vẫn làm mỗi ngày.
+              </Reveal>
+            </div>
+          </div>
+        </div>
       </section>
 
       <section className="mx-auto max-w-[1360px] px-5 md:px-10 pb-[90px]">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-[1fr_2fr]">
           <Reveal className="border-t pt-2 text-[11px] tracking-[0.32em] text-stone uppercase [border-color:rgba(25,20,16,0.15)]">
-            02 — Made in Huế
+            03 — Made in Huế
           </Reveal>
           <div className="grid grid-cols-1 items-center gap-11 md:grid-cols-[1.5fr_1fr]">
             <div>
