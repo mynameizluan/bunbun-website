@@ -72,6 +72,9 @@ export default function AboutPage() {
               transform: "translate(-50%, -50%) rotate(90deg)",
               objectFit: "cover",
               display: "block",
+              // brightness đẩy nền xám #f3f3f3 của video lên trắng tinh,
+              // rồi multiply biến trắng thành đúng màu giấy → nền video tan hẳn vào trang
+              filter: "brightness(1.06)",
               mixBlendMode: "multiply",
             }}
           />
