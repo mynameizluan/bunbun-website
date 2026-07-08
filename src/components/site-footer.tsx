@@ -12,28 +12,9 @@ import { Reveal } from "@/components/motion/reveal";
 import { asset } from "@/lib/asset";
 import { NAV_LABELS, ROUTES, type Locale, type RouteKey } from "@/lib/i18n";
 
-const COPY = {
-  vi: {
-    bigHead: "Đói rồi?",
-    bigItalic: "Bunbun lo.",
-    orderNow: "Đặt hàng ngay",
-    tagline: "Tự hào là thương hiệu burger Made in Huế.",
-    explore: "Khám phá",
-    orderCol: "Đặt món",
-    grabSoon: "GrabFood · sắp có",
-    credit: "Thiết kế & vận hành tại Huế",
-  },
-  en: {
-    bigHead: "Hungry?",
-    bigItalic: "Bunbun’s got you.",
-    orderNow: "Order now",
-    tagline: "Proudly a burger brand Made in Huế.",
-    explore: "Explore",
-    orderCol: "Order",
-    grabSoon: "GrabFood · coming soon",
-    credit: "Designed & run in Huế",
-  },
-} as const;
+import content from "@/data/site-content.json";
+
+const COPY = content.copy.footer;
 
 const ROUTE_KEYS: RouteKey[] = ["home", "menu", "about", "contact"];
 
@@ -66,7 +47,7 @@ export function SiteFooter({ locale }: { locale: Locale }) {
           <div>
             <div className="mb-4 flex items-center gap-[11px]">
               <Image
-                src={asset("/logo.png")}
+                src={asset(content.assets.logo)}
                 alt="Bunbun Burger — logo mèo burger"
                 width={32}
                 height={32}

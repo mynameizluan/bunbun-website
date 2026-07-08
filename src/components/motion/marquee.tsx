@@ -1,19 +1,8 @@
 import type { Locale } from "@/lib/i18n";
+import content from "@/data/site-content.json";
 
-const ITEMS: Record<Locale, { text: string; emphasis?: boolean }[]> = {
-  vi: [
-    { text: "Burger đồng giá 43K" },
-    { text: "Made in Huế", emphasis: true },
-    { text: "Khoai tây thủ công" },
-    { text: "Món theo mùa", emphasis: true },
-  ],
-  en: [
-    { text: "Burgers all at 43K" },
-    { text: "Made in Huế", emphasis: true },
-    { text: "Hand-cut fries" },
-    { text: "Seasonal specials", emphasis: true },
-  ],
-};
+const ITEMS: Record<Locale, { text: string; emphasis?: boolean }[]> =
+  content.copy.marquee;
 
 function Track({ locale }: { locale: Locale }) {
   return (

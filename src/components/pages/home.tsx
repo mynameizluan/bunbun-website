@@ -9,66 +9,9 @@ import { ORDER_URL, SHOPEE_URL, PHONE_DISPLAY, PHONE_TEL } from "@/lib/constants
 import { asset } from "@/lib/asset";
 import { ROUTES, HOURS_I18N, VENUE_LABELS, type Locale } from "@/lib/i18n";
 
-const COPY = {
-  vi: {
-    eyebrow: "Burger thủ công · Made in Huế",
-    h1Head: "Một chiếc burger,",
-    h1Mid: "làm chậm rãi ",
-    h1Italic: "như một món Huế.",
-    lead: "Chiếc bánh ủ mềm mang dấu Bunbun, khoai tây cắt tay từng lát, và những hũ xốt nêm theo trí nhớ vị giác của người Huế. Ở đây, “nhanh” chỉ nói về thời gian bạn chờ — không phải cách chúng tôi làm món.",
-    orderNow: "Đặt hàng ngay",
-    menuLink: "Thực đơn",
-    heroAlt: "Bunbun Burger — combo lifestyle",
-    philosophyLabel: "01 — Triết lý",
-    philosophyPre: "Ít món hơn, kỹ hơn. Một công thức phải được thử đi thử lại đến khi ",
-    philosophyItalic: "cả bếp gật đầu",
-    philosophyPost: " — rồi mới có tên trên thực đơn.",
-    ourStory: "Câu chuyện của chúng tôi",
-    signatureLabel: "02 — Món signature",
-    fullMenu: "Toàn bộ thực đơn",
-    quoteLabel: "03 — Made in Huế",
-    quotePre: "“Huế dạy chúng tôi sự chỉn chu, và niềm tự hào với những gì làm bằng tay. Chiếc burger này là cách chúng tôi kể chuyện Huế — ",
-    quoteItalic: "bạn nếm là hiểu.",
-    quotePost: "”",
-    quoteBy: "Đội ngũ Bunbun — 39A Bến Nghé",
-    orderLabel: "04 — Đặt món",
-    comingSoon: "Sắp có",
-    zaloRow: "Zalo Mini App · tích điểm",
-    visitLabel: "05 — Ghé quán · Hai cơ sở tại Huế",
-    mapAll: "Bản đồ cả 2 cơ sở →",
-    teaserLabel: "06 — Thực đơn",
-    dishes: "món",
-  },
-  en: {
-    eyebrow: "Handcrafted burgers · Made in Huế",
-    h1Head: "One burger,",
-    h1Mid: "made slowly, ",
-    h1Italic: "like a dish from Huế.",
-    lead: "A soft-baked bun pressed with the Bunbun mark, fries cut by hand, and sauces seasoned from the taste memory of Huế. Here, “fast” describes your wait — not the way we cook.",
-    orderNow: "Order now",
-    menuLink: "Menu",
-    heroAlt: "Bunbun Burger — lifestyle combo",
-    philosophyLabel: "01 — Philosophy",
-    philosophyPre: "Fewer dishes, done more carefully. A recipe is tested again and again until ",
-    philosophyItalic: "the whole kitchen nods",
-    philosophyPost: " — only then does it make the menu.",
-    ourStory: "Our story",
-    signatureLabel: "02 — Signature dishes",
-    fullMenu: "Full menu",
-    quoteLabel: "03 — Made in Huế",
-    quotePre: "“Huế taught us to care about the small things — and to take pride in what’s made by hand. This burger is how we tell Huế’s story: ",
-    quoteItalic: "one bite and you’ll get it.",
-    quotePost: "”",
-    quoteBy: "The Bunbun team — 39A Bến Nghé",
-    orderLabel: "04 — Order",
-    comingSoon: "Coming soon",
-    zaloRow: "Zalo Mini App · loyalty points",
-    visitLabel: "05 — Visit us · Two locations in Huế",
-    mapAll: "Map of both locations →",
-    teaserLabel: "06 — Menu",
-    dishes: "dishes",
-  },
-} as const;
+import content from "@/data/site-content.json";
+
+const COPY = content.copy.home;
 
 const SIGNATURE_SPANS = [
   { col: "md:col-span-7", ratio: "aspect-[4/3]" },
@@ -140,7 +83,7 @@ export function HomePage({ locale }: { locale: Locale }) {
           style={{ marginLeft: "calc(50% - 50vw)" }}
         >
           <Image
-            src={asset("/hero-banner-clean.png")}
+            src={asset(content.assets.heroBanner)}
             alt={t.heroAlt}
             fill
             priority

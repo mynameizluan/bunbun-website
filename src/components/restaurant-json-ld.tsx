@@ -1,4 +1,6 @@
-import { ORDER_URL } from "@/lib/constants";
+import { ORDER_URL, PHONE_TEL, VENUE_1, VENUE_2 } from "@/lib/constants";
+import { SITE_URL } from "@/lib/site";
+import content from "@/data/site-content.json";
 
 const WEEKDAY_HOURS = {
   "@type": "OpeningHoursSpecification",
@@ -17,12 +19,12 @@ const WEEKEND_HOURS = {
 function restaurant(id: string, name: string, streetAddress: string) {
   return {
     "@type": "Restaurant",
-    "@id": `https://bunbunburger.vn/#${id}`,
+    "@id": `${SITE_URL}/#${id}`,
     name,
-    image: "https://bunbunburger.vn/hero-banner-clean.png",
+    image: `${SITE_URL}${content.assets.heroBanner}`,
     servesCuisine: "Burger",
     priceRange: "19.000đ – 139.000đ",
-    telephone: "+84799289889",
+    telephone: PHONE_TEL.replace("tel:0", "+84"),
     address: {
       "@type": "PostalAddress",
       streetAddress,
@@ -31,15 +33,15 @@ function restaurant(id: string, name: string, streetAddress: string) {
     },
     openingHoursSpecification: [WEEKDAY_HOURS, WEEKEND_HOURS],
     hasMenu: ORDER_URL,
-    url: "https://bunbunburger.vn",
+    url: SITE_URL,
   };
 }
 
 const jsonLd = {
   "@context": "https://schema.org",
   "@graph": [
-    restaurant("cs1", "Bunbun Burger — 39A Bến Nghé", "39A Bến Nghé, Phú Hội"),
-    restaurant("cs2", "Bunbun Burger — 02 Đặng Thái Thân", "02 Đặng Thái Thân"),
+    restaurant("cs1", "Bunbun Burger — Cơ sở 1", VENUE_1.address),
+    restaurant("cs2", "Bunbun Burger — Cơ sở 2", VENUE_2.address),
   ],
 };
 
@@ -47,7 +49,6 @@ export function RestaurantJsonLd() {
   return (
     <script
       type="application/ld+json"
-       
       dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
     />
   );

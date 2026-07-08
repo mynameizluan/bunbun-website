@@ -1,8 +1,9 @@
 import type { MetadataRoute } from "next";
+import { SITE_URL } from "@/lib/site";
 
 export const dynamic = "force-static";
 
-const BASE_URL = "https://bunbunburger.vn";
+const BASE_URL = SITE_URL;
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const routes = [

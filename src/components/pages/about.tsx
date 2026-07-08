@@ -3,46 +3,9 @@ import { KeptVideo } from "@/components/motion/kept-video";
 import { asset } from "@/lib/asset";
 import type { Locale } from "@/lib/i18n";
 
-const COPY = {
-  vi: {
-    eyebrow: "Về chúng tôi",
-    h1Head: "Sinh ra ở Huế,",
-    h1Mid: "lớn lên ",
-    h1Italic: "từ quầy bếp mở.",
-    beginLabel: "01 — Khởi đầu",
-    beginBody:
-      "Bunbun bắt đầu bằng một quầy bếp mở ở 39A Bến Nghé — không có gì để giấu, và cũng chẳng có gì cần giấu. Bạn gọi món, rồi nhìn chiếc burger của mình thành hình từ đầu đến cuối: bánh in dấu Bunbun nướng ấm, khoai cắt tay vừa thả vào chảo, lớp xốt cuối rưới xuống ngay trước khi gói lại. Bên cạnh là một quầy trà nhỏ — trà sữa nhài, trà đào, trà dâu — để buổi chiều Huế trôi chậm thêm một chút.",
-    hueLabel: "02 — Made in Huế",
-    quotePre: "“Made in Huế” không chỉ là nơi chốn. Đó là cách làm việc: ",
-    quoteItalic: "tử tế, chỉn chu,",
-    quotePost: " và tự hào về mảnh đất mình lớn lên.",
-    hueBody:
-      "Thực đơn cố định chỉ giữ 35 món — đủ ít để món nào cũng được chăm kỹ, đủ nhiều để lần sau quay lại bạn vẫn còn thứ để thử. Phần còn lại dành cho những món theo mùa, xuất hiện một quãng ngắn rồi thôi. Mỗi chiếc burger mang một chút tính cách Huế: đậm đà mà tinh tế, giản dị mà không giản đơn.",
-    videoAria: "Bunbun Burger — clip stop-motion Made in Huế",
-    stat1: "Burger đồng giá",
-    stat2: "Món cố định + món theo mùa",
-    stat3: "Nơi mọi thứ bắt đầu",
-  },
-  en: {
-    eyebrow: "About us",
-    h1Head: "Born in Huế,",
-    h1Mid: "raised ",
-    h1Italic: "behind an open counter.",
-    beginLabel: "01 — The beginning",
-    beginBody:
-      "Bunbun began with an open kitchen counter at 39A Bến Nghé — nothing to hide, and nothing that needs hiding. You order, then watch your burger come together from start to finish: the Bunbun-stamped bun warmed up, hand-cut fries dropped into the fryer, the last spoon of sauce added right before it’s wrapped. Next to it, a small tea bar — jasmine milk tea, peach tea, strawberry tea — to slow a Huế afternoon down a little more.",
-    hueLabel: "02 — Made in Huế",
-    quotePre: "“Made in Huế” isn’t just a place. It’s a way of working: ",
-    quoteItalic: "kind, meticulous,",
-    quotePost: " and proud of where we grew up.",
-    hueBody:
-      "The fixed menu keeps just 35 dishes — few enough that every one gets real attention, plenty enough that there’s still something new next visit. The rest is left to seasonal specials that appear for a short while, then go. Every burger carries a little of Huế’s character: rich yet refined, simple but never plain.",
-    videoAria: "Bunbun Burger — Made in Huế stop-motion clip",
-    stat1: "One price for burgers",
-    stat2: "Fixed dishes + seasonal specials",
-    stat3: "Where it all began",
-  },
-} as const;
+import content from "@/data/site-content.json";
+
+const COPY = content.copy.about;
 
 export function AboutPage({ locale }: { locale: Locale }) {
   const t = COPY[locale];
@@ -107,8 +70,8 @@ export function AboutPage({ locale }: { locale: Locale }) {
                 }}
               >
                 <KeptVideo
-                  src={asset("/bunbun-stopmotion.mp4")}
-                  poster={asset("/stopmotion-poster.png")}
+                  src={asset(content.assets.video)}
+                  poster={asset(content.assets.videoPoster)}
                   ariaLabel={t.videoAria}
                   style={{
                     position: "absolute",

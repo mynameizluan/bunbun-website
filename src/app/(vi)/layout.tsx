@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SITE_URL } from "@/lib/site";
 import "../globals.css";
 import { fontClass } from "@/lib/fonts";
 import { SiteNav } from "@/components/site-nav";
@@ -6,7 +7,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { RestaurantJsonLd } from "@/components/restaurant-json-ld";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://bunbunburger.vn"),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Bunbun Burger — Burger thủ công Made in Huế",
     template: "%s · Bunbun Burger",

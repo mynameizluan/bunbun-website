@@ -7,32 +7,9 @@ import { localizeMenu, formatPrice } from "@/data/menu";
 import { ORDER_URL, FACEBOOK_URL } from "@/lib/constants";
 import type { Locale } from "@/lib/i18n";
 
-const COPY = {
-  vi: {
-    eyebrow: "Thực đơn · Burger đồng giá 43K",
-    h1Head: "Thực đơn ",
-    h1Italic: "Bunbun.",
-    all: "Tất cả",
-    ready: "Sẵn sàng gọi món?",
-    orderNow: "Đặt hàng ngay",
-    seasonalPre: "✳ Ngoài thực đơn cố định, Bunbun còn có ",
-    seasonalItalic: "món theo mùa",
-    seasonalMid: " — xuất hiện một quãng ngắn rồi thôi. Theo dõi ",
-    seasonalPost: " để không bỏ lỡ.",
-  },
-  en: {
-    eyebrow: "Menu · Burgers all at 43K",
-    h1Head: "The Bunbun ",
-    h1Italic: "menu.",
-    all: "All",
-    ready: "Ready to order?",
-    orderNow: "Order now",
-    seasonalPre: "✳ Beyond the fixed menu, Bunbun also cooks ",
-    seasonalItalic: "seasonal specials",
-    seasonalMid: " — around for a short while, then gone. Follow ",
-    seasonalPost: " so you don’t miss them.",
-  },
-} as const;
+import content from "@/data/site-content.json";
+
+const COPY = content.copy.menuPage;
 
 export function MenuClient({ locale }: { locale: Locale }) {
   const t = COPY[locale];

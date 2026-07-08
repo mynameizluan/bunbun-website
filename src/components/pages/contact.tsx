@@ -13,34 +13,9 @@ import {
 import { asset } from "@/lib/asset";
 import { HOURS_I18N, VENUE_LABELS, type Locale } from "@/lib/i18n";
 
-const COPY = {
-  vi: {
-    eyebrow: "Liên hệ",
-    h1Head: "Ghé ",
-    h1Italic: "Bunbun.",
-    lead: "Cứ tìm bức tường cam “i Love Huế” — thấy nó là tới nơi. Hai cơ sở ngay trung tâm thành phố, ghé ăn tại chỗ hay mang đi đều được; mèo Bunbun đợi bạn ngay ở cửa.",
-    venueAlt: "Bunbun Burger — mặt tiền quán",
-    mapTitle: "Bản đồ tới Bunbun Burger",
-    directions: "Chỉ đường →",
-    hotline: "Hotline · Bấm để gọi",
-    hoursTitle: "Giờ mở cửa · Cả 2 cơ sở",
-    connect: "Kết nối",
-    orderIpos: "Đặt hàng · iPOS",
-  },
-  en: {
-    eyebrow: "Contact",
-    h1Head: "Visit ",
-    h1Italic: "Bunbun.",
-    lead: "Just look for the orange “i Love Huế” wall — you’re there. Two locations in the heart of the city; dine in or take away, and the Bunbun cat will be waiting at the door.",
-    venueAlt: "Bunbun Burger — storefront",
-    mapTitle: "Map to Bunbun Burger",
-    directions: "Directions →",
-    hotline: "Hotline · Tap to call",
-    hoursTitle: "Opening hours · Both locations",
-    connect: "Connect",
-    orderIpos: "Order · iPOS",
-  },
-} as const;
+import content from "@/data/site-content.json";
+
+const COPY = content.copy.contact;
 
 function mapEmbedUrl(query: string) {
   return `https://maps.google.com/maps?q=${encodeURIComponent(
@@ -117,7 +92,7 @@ export function ContactPage({ locale }: { locale: Locale }) {
       <Reveal className="mb-20 grid grid-cols-1 items-center gap-11 md:grid-cols-[0.82fr_1.18fr]">
         <div className="relative aspect-[4/5] overflow-hidden rounded bg-placeholder">
           <Image
-            src={asset("/contact-venue-v2.png")}
+            src={asset(content.assets.contactVenue)}
             alt={t.venueAlt}
             fill
             className="object-cover"

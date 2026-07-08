@@ -1,3 +1,5 @@
+import content from "@/data/site-content.json";
+
 export type Locale = "vi" | "en";
 
 // Route tương ứng giữa 2 ngôn ngữ — vi ở gốc, en dưới /en
@@ -37,16 +39,8 @@ export const NAV_LABELS: Record<Locale, Record<RouteKey, string>> = {
   },
 };
 
-export const HOURS_I18N: Record<Locale, { days: string; time: string }[]> = {
-  vi: [
-    { days: "Thứ 2 – Thứ 6", time: "10:00 – 22:00" },
-    { days: "Thứ 7 – Chủ nhật", time: "09:00 – 22:30" },
-  ],
-  en: [
-    { days: "Mon – Fri", time: "10:00 – 22:00" },
-    { days: "Sat – Sun", time: "09:00 – 22:30" },
-  ],
-};
+export const HOURS_I18N: Record<Locale, { days: string; time: string }[]> =
+  content.contact.hours;
 
 export const VENUE_LABELS: Record<Locale, [string, string]> = {
   vi: ["Cơ sở 01", "Cơ sở 02"],

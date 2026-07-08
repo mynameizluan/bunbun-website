@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ORDER_URL, PHONE_DISPLAY, PHONE_TEL } from "@/lib/constants";
 import { asset } from "@/lib/asset";
+import content from "@/data/site-content.json";
 import {
   NAV_LABELS,
   ROUTES,
@@ -94,7 +95,7 @@ export function SiteNav({ locale }: { locale: Locale }) {
             className="flex shrink-0 items-center gap-3"
           >
             <Image
-              src={asset("/logo.png")}
+              src={asset(content.assets.logo)}
               alt="Bunbun Burger — logo mèo burger"
               width={34}
               height={34}
