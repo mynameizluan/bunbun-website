@@ -10,15 +10,36 @@ import {
 } from "@/lib/constants";
 import { Reveal } from "@/components/motion/reveal";
 import { asset } from "@/lib/asset";
+import { NAV_LABELS, ROUTES, type Locale, type RouteKey } from "@/lib/i18n";
 
-const exploreLinks = [
-  { href: "/", label: "Trang chủ" },
-  { href: "/menu", label: "Thực đơn" },
-  { href: "/ve-chung-toi", label: "Về chúng tôi" },
-  { href: "/lien-he", label: "Liên hệ" },
-];
+const COPY = {
+  vi: {
+    bigHead: "Đói rồi?",
+    bigItalic: "Bunbun lo.",
+    orderNow: "Đặt hàng ngay",
+    tagline: "Tự hào là thương hiệu burger Made in Huế.",
+    explore: "Khám phá",
+    orderCol: "Đặt món",
+    grabSoon: "GrabFood · sắp có",
+    credit: "Thiết kế & vận hành tại Huế",
+  },
+  en: {
+    bigHead: "Hungry?",
+    bigItalic: "Bunbun’s got you.",
+    orderNow: "Order now",
+    tagline: "Proudly a burger brand Made in Huế.",
+    explore: "Explore",
+    orderCol: "Order",
+    grabSoon: "GrabFood · coming soon",
+    credit: "Designed & run in Huế",
+  },
+} as const;
 
-export function SiteFooter() {
+const ROUTE_KEYS: RouteKey[] = ["home", "menu", "about", "contact"];
+
+export function SiteFooter({ locale }: { locale: Locale }) {
+  const t = COPY[locale];
+
   return (
     <footer className="mt-10 bg-ink px-5 md:px-10 pt-[90px] pb-12 text-paper">
       <div className="mx-auto max-w-[1360px]">
@@ -27,9 +48,9 @@ export function SiteFooter() {
           delay={0}
         >
           <div className="font-display text-[clamp(34px,4.6vw,60px)] leading-[1.1] font-light tracking-[-0.025em]">
-            Đói rồi?
+            {t.bigHead}
             <br />
-            <span className="text-ember italic">Bunbun lo.</span>
+            <span className="text-ember italic">{t.bigItalic}</span>
           </div>
           <a
             href={ORDER_URL}
@@ -37,7 +58,7 @@ export function SiteFooter() {
             rel="noopener"
             className="rounded-full bg-ember px-9 py-[18px] font-display text-xs font-semibold tracking-[0.18em] text-white uppercase transition-colors duration-[250ms] hover:bg-ember-deep"
           >
-            Đặt hàng ngay
+            {t.orderNow}
           </a>
         </Reveal>
 
@@ -56,7 +77,7 @@ export function SiteFooter() {
               </span>
             </div>
             <p className="max-w-[42ch] text-[13px] leading-[1.8] text-stone-dark">
-              Tự hào là thương hiệu burger Made in Huế.
+              {t.tagline}
               <br />
               39A Bến Nghé · 02 Đặng Thái Thân, TP. Huế
               <br />
@@ -72,23 +93,23 @@ export function SiteFooter() {
           </div>
           <div>
             <div className="mb-[18px] text-[11px] tracking-[0.28em] text-stone-dark uppercase">
-              Khám phá
+              {t.explore}
             </div>
             <div className="flex flex-col gap-3 text-sm text-stone-on-dark">
-              {exploreLinks.map((link) => (
+              {ROUTE_KEYS.map((key) => (
                 <Link
-                  key={link.href}
-                  href={link.href}
+                  key={key}
+                  href={ROUTES[key][locale]}
                   className="transition-colors duration-[250ms] hover:text-ember"
                 >
-                  {link.label}
+                  {NAV_LABELS[locale][key]}
                 </Link>
               ))}
             </div>
           </div>
           <div>
             <div className="mb-[18px] text-[11px] tracking-[0.28em] text-stone-dark uppercase">
-              Đặt món
+              {t.orderCol}
             </div>
             <div className="flex flex-col gap-3 text-sm text-stone-on-dark">
               <a
@@ -115,14 +136,14 @@ export function SiteFooter() {
               >
                 Facebook
               </a>
-              <span className="opacity-45">GrabFood · sắp có</span>
+              <span className="opacity-45">{t.grabSoon}</span>
             </div>
           </div>
         </div>
 
         <div className="mt-13 flex flex-wrap justify-between gap-3 border-t pt-6 text-[11px] tracking-[0.14em] text-stone-dark uppercase [border-color:rgba(251,247,242,0.12)]">
           <span>© {new Date().getFullYear()} Bunbun Burger — Made in Huế</span>
-          <span>Thiết kế & vận hành tại Huế</span>
+          <span>{t.credit}</span>
         </div>
       </div>
     </footer>

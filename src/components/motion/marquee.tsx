@@ -1,14 +1,24 @@
-const ITEMS: { text: string; emphasis?: boolean }[] = [
-  { text: "Burger đồng giá 43K" },
-  { text: "Made in Huế", emphasis: true },
-  { text: "Khoai tây thủ công" },
-  { text: "Món theo mùa", emphasis: true },
-];
+import type { Locale } from "@/lib/i18n";
 
-function Track() {
+const ITEMS: Record<Locale, { text: string; emphasis?: boolean }[]> = {
+  vi: [
+    { text: "Burger đồng giá 43K" },
+    { text: "Made in Huế", emphasis: true },
+    { text: "Khoai tây thủ công" },
+    { text: "Món theo mùa", emphasis: true },
+  ],
+  en: [
+    { text: "Burgers all at 43K" },
+    { text: "Made in Huế", emphasis: true },
+    { text: "Hand-cut fries" },
+    { text: "Seasonal specials", emphasis: true },
+  ],
+};
+
+function Track({ locale }: { locale: Locale }) {
   return (
     <div className="flex items-center gap-16 pr-16">
-      {ITEMS.map((item, i) => (
+      {ITEMS[locale].map((item, i) => (
         <span key={i} className="flex items-center gap-16">
           <span
             className={
@@ -26,7 +36,7 @@ function Track() {
   );
 }
 
-export function Marquee() {
+export function Marquee({ locale = "vi" }: { locale?: Locale }) {
   return (
     <section
       aria-hidden="true"
@@ -34,8 +44,8 @@ export function Marquee() {
       style={{ borderColor: "var(--hairline)" }}
     >
       <div className="flex w-max animate-[bbmarquee_30s_linear_infinite] motion-reduce:animate-none">
-        <Track />
-        <Track />
+        <Track locale={locale} />
+        <Track locale={locale} />
       </div>
     </section>
   );

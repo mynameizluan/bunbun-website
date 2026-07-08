@@ -1,18 +1,74 @@
-import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Reveal } from "@/components/motion/reveal";
 import { RevealBand } from "@/components/motion/reveal-band";
 import { TiltCard } from "@/components/motion/tilt-card";
 import { Marquee } from "@/components/motion/marquee";
-import { getSignatureItems, BUNBUN_MENU, formatPrice } from "@/data/menu";
+import { getSignatureItems, localizeMenu, formatPrice } from "@/data/menu";
 import { ORDER_URL, SHOPEE_URL, PHONE_DISPLAY, PHONE_TEL } from "@/lib/constants";
 import { asset } from "@/lib/asset";
+import { ROUTES, HOURS_I18N, VENUE_LABELS, type Locale } from "@/lib/i18n";
 
-export const metadata: Metadata = {
-  description:
-    "Một chiếc burger, làm chậm rãi như một món Huế. Bánh ủ mềm, khoai tây cắt tay chiên thủ công, xốt nêm theo khẩu vị Huế. Đồng giá 43.000đ, 2 cơ sở tại Huế.",
-};
+const COPY = {
+  vi: {
+    eyebrow: "Burger thủ công · Made in Huế",
+    h1Head: "Một chiếc burger,",
+    h1Mid: "làm chậm rãi ",
+    h1Italic: "như một món Huế.",
+    lead: "Chiếc bánh ủ mềm mang dấu Bunbun, khoai tây cắt tay từng lát, và những hũ xốt nêm theo trí nhớ vị giác của người Huế. Ở đây, “nhanh” chỉ nói về thời gian bạn chờ — không phải cách chúng tôi làm món.",
+    orderNow: "Đặt hàng ngay",
+    menuLink: "Thực đơn",
+    heroAlt: "Bunbun Burger — combo lifestyle",
+    philosophyLabel: "01 — Triết lý",
+    philosophyPre: "Ít món hơn, kỹ hơn. Một công thức phải được thử đi thử lại đến khi ",
+    philosophyItalic: "cả bếp gật đầu",
+    philosophyPost: " — rồi mới có tên trên thực đơn.",
+    ourStory: "Câu chuyện của chúng tôi",
+    signatureLabel: "02 — Món signature",
+    fullMenu: "Toàn bộ thực đơn",
+    quoteLabel: "03 — Made in Huế",
+    quotePre: "“Huế dạy chúng tôi sự chỉn chu, và niềm tự hào với những gì làm bằng tay. Chiếc burger này là cách chúng tôi kể chuyện Huế — ",
+    quoteItalic: "bạn nếm là hiểu.",
+    quotePost: "”",
+    quoteBy: "Đội ngũ Bunbun — 39A Bến Nghé",
+    orderLabel: "04 — Đặt món",
+    comingSoon: "Sắp có",
+    zaloRow: "Zalo Mini App · tích điểm",
+    visitLabel: "05 — Ghé quán · Hai cơ sở tại Huế",
+    mapAll: "Bản đồ cả 2 cơ sở →",
+    teaserLabel: "06 — Thực đơn",
+    dishes: "món",
+  },
+  en: {
+    eyebrow: "Handcrafted burgers · Made in Huế",
+    h1Head: "One burger,",
+    h1Mid: "made slowly, ",
+    h1Italic: "like a dish from Huế.",
+    lead: "A soft-baked bun pressed with the Bunbun mark, fries cut by hand, and sauces seasoned from the taste memory of Huế. Here, “fast” describes your wait — not the way we cook.",
+    orderNow: "Order now",
+    menuLink: "Menu",
+    heroAlt: "Bunbun Burger — lifestyle combo",
+    philosophyLabel: "01 — Philosophy",
+    philosophyPre: "Fewer dishes, done more carefully. A recipe is tested again and again until ",
+    philosophyItalic: "the whole kitchen nods",
+    philosophyPost: " — only then does it make the menu.",
+    ourStory: "Our story",
+    signatureLabel: "02 — Signature dishes",
+    fullMenu: "Full menu",
+    quoteLabel: "03 — Made in Huế",
+    quotePre: "“Huế taught us to care about the small things — and to take pride in what’s made by hand. This burger is how we tell Huế’s story: ",
+    quoteItalic: "one bite and you’ll get it.",
+    quotePost: "”",
+    quoteBy: "The Bunbun team — 39A Bến Nghé",
+    orderLabel: "04 — Order",
+    comingSoon: "Coming soon",
+    zaloRow: "Zalo Mini App · loyalty points",
+    visitLabel: "05 — Visit us · Two locations in Huế",
+    mapAll: "Map of both locations →",
+    teaserLabel: "06 — Menu",
+    dishes: "dishes",
+  },
+} as const;
 
 const SIGNATURE_SPANS = [
   { col: "md:col-span-7", ratio: "aspect-[4/3]" },
@@ -21,14 +77,17 @@ const SIGNATURE_SPANS = [
   { col: "md:col-span-7", ratio: "aspect-[4/3]" },
 ];
 
-export default function HomePage() {
-  const signature = getSignatureItems(4);
-  const teaserGroups = BUNBUN_MENU.groups.map((g, i) => ({
+export function HomePage({ locale }: { locale: Locale }) {
+  const t = COPY[locale];
+  const signature = getSignatureItems(4, locale);
+  const teaserGroups = localizeMenu(locale).map((g, i) => ({
     id: g.id,
     name: g.name,
     count: g.items.length,
     idx: (i + 1 < 10 ? "0" : "") + (i + 1),
   }));
+  const hours = HOURS_I18N[locale];
+  const venueLabels = VENUE_LABELS[locale];
 
   return (
     <main>
@@ -37,18 +96,16 @@ export default function HomePage() {
         <Reveal delay={0} className="mb-9 flex items-center gap-3.5">
           <span className="h-1.5 w-1.5 rounded-full bg-ember" />
           <span className="text-[11px] font-normal tracking-[0.32em] text-ink uppercase">
-            Burger thủ công · Made in Huế
+            {t.eyebrow}
           </span>
         </Reveal>
 
         <Reveal delay={130}>
           <h1 className="mb-11 max-w-[20ch] font-display text-[clamp(44px,7.4vw,110px)] leading-[1.04] font-normal tracking-[-0.03em]">
-            Một chiếc burger,
+            {t.h1Head}
             <br />
-            làm chậm rãi{" "}
-            <span className="font-light text-ember italic">
-              như một món&nbsp;Huế.
-            </span>
+            {t.h1Mid}
+            <span className="font-light text-ember italic">{t.h1Italic}</span>
           </h1>
         </Reveal>
 
@@ -57,10 +114,7 @@ export default function HomePage() {
           className="mb-16 flex flex-wrap items-end justify-between gap-7"
         >
           <p className="max-w-[44ch] text-base leading-[1.85] text-body">
-            Chiếc bánh ủ mềm mang dấu Bunbun, khoai tây cắt tay từng lát, và
-            những hũ xốt nêm theo trí nhớ vị giác của người Huế. Ở đây,
-            &ldquo;nhanh&rdquo; chỉ nói về thời gian bạn chờ — không phải
-            cách chúng tôi làm món.
+            {t.lead}
           </p>
           <div className="flex items-center gap-7">
             <a
@@ -69,13 +123,13 @@ export default function HomePage() {
               rel="noopener"
               className="rounded-full bg-ember px-[30px] py-4 font-display text-xs font-semibold tracking-[0.18em] text-white uppercase transition-colors duration-[250ms] hover:bg-ember-deep"
             >
-              Đặt hàng ngay
+              {t.orderNow}
             </a>
             <Link
-              href="/menu"
+              href={ROUTES.menu[locale]}
               className="border-b border-ink pb-1 text-[13px] tracking-[0.14em] text-ink uppercase transition-colors duration-[250ms] hover:border-ember hover:text-ember"
             >
-              Thực đơn
+              {t.menuLink}
             </Link>
           </div>
         </Reveal>
@@ -87,7 +141,7 @@ export default function HomePage() {
         >
           <Image
             src={asset("/hero-banner-clean.png")}
-            alt="Bunbun Burger — combo lifestyle"
+            alt={t.heroAlt}
             fill
             priority
             className="object-cover"
@@ -96,26 +150,26 @@ export default function HomePage() {
         </RevealBand>
       </section>
 
-      <Marquee />
+      <Marquee locale={locale} />
 
       {/* ---------- PHILOSOPHY ---------- */}
       <section className="mx-auto max-w-[1360px] px-5 md:px-10 pt-[64px] pb-[72px] md:pt-[110px] md:pb-[120px]">
         <div className="grid grid-cols-1 items-start gap-12 md:grid-cols-[1fr_2fr]">
           <Reveal className="pt-2.5 text-[11px] tracking-[0.32em] text-stone uppercase">
-            01 — Triết lý
+            {t.philosophyLabel}
           </Reveal>
           <div>
             <Reveal className="mb-10 max-w-[30ch] font-display text-[clamp(24px,3.2vw,40px)] leading-[1.35] font-normal tracking-[-0.015em] text-ink">
-              Ít món hơn, kỹ hơn. Một công thức phải được thử đi thử lại đến
-              khi <span className="text-ember italic">cả bếp gật đầu</span>{" "}
-              — rồi mới có tên trên thực đơn.
+              {t.philosophyPre}
+              <span className="text-ember italic">{t.philosophyItalic}</span>
+              {t.philosophyPost}
             </Reveal>
             <Reveal>
               <Link
-                href="/ve-chung-toi"
+                href={ROUTES.about[locale]}
                 className="border-b border-ink pb-1 text-[13px] tracking-[0.14em] text-ink uppercase transition-colors duration-[250ms] hover:border-ember hover:text-ember"
               >
-                Câu chuyện của chúng tôi
+                {t.ourStory}
               </Link>
             </Reveal>
           </div>
@@ -126,13 +180,13 @@ export default function HomePage() {
       <section className="mx-auto max-w-[1360px] px-5 md:px-10 pb-[60px]">
         <Reveal className="mb-13 flex items-baseline justify-between gap-6 border-t pt-[22px] [border-color:rgba(25,20,16,0.15)]">
           <div className="text-[11px] tracking-[0.32em] text-stone uppercase">
-            02 — Món signature
+            {t.signatureLabel}
           </div>
           <Link
-            href="/menu"
+            href={ROUTES.menu[locale]}
             className="border-b border-ink pb-1 text-[13px] tracking-[0.14em] text-ink uppercase transition-colors duration-[250ms] hover:border-ember hover:text-ember"
           >
-            Toàn bộ thực đơn
+            {t.fullMenu}
           </Link>
         </Reveal>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-12">
@@ -176,17 +230,16 @@ export default function HomePage() {
       <section className="mt-20 bg-ink px-5 py-[80px] md:px-10 md:py-[130px] text-paper">
         <div className="mx-auto grid max-w-[1360px] grid-cols-1 gap-12 md:grid-cols-[1fr_2fr]">
           <Reveal className="pt-2.5 text-[11px] tracking-[0.32em] text-stone-dark uppercase">
-            03 — Made in Huế
+            {t.quoteLabel}
           </Reveal>
           <div>
             <Reveal className="max-w-[26ch] font-display text-[clamp(26px,3.6vw,46px)] leading-[1.3] font-light tracking-[-0.015em]">
-              &ldquo;Huế dạy chúng tôi sự chỉn chu, và niềm tự hào với những
-              gì làm bằng tay. Chiếc burger này là cách chúng tôi kể chuyện
-              Huế — <span className="text-ember italic">bạn nếm là hiểu.</span>
-              &rdquo;
+              {t.quotePre}
+              <span className="text-ember italic">{t.quoteItalic}</span>
+              {t.quotePost}
             </Reveal>
             <Reveal className="mt-9 text-[11px] tracking-[0.24em] text-stone-dark uppercase">
-              Đội ngũ Bunbun — 39A Bến Nghé
+              {t.quoteBy}
             </Reveal>
           </div>
         </div>
@@ -197,7 +250,7 @@ export default function HomePage() {
         <div className="grid grid-cols-1 gap-16 md:grid-cols-2">
           <div>
             <Reveal className="mb-9 border-t pt-[22px] text-[11px] tracking-[0.32em] text-stone uppercase [border-color:rgba(25,20,16,0.15)]">
-              04 — Đặt món
+              {t.orderLabel}
             </Reveal>
             <div className="flex flex-col">
               <Reveal>
@@ -231,28 +284,28 @@ export default function HomePage() {
                   GrabFood
                 </span>
                 <span className="text-[11px] tracking-[0.2em] uppercase">
-                  Sắp có
+                  {t.comingSoon}
                 </span>
               </Reveal>
               <Reveal className="flex items-center justify-between border-b px-0.5 py-5 text-[#B3A798] [border-color:rgba(25,20,16,0.12)]">
                 <span className="font-display text-lg font-medium">
-                  Zalo Mini App · tích điểm
+                  {t.zaloRow}
                 </span>
                 <span className="text-[11px] tracking-[0.2em] uppercase">
-                  Sắp có
+                  {t.comingSoon}
                 </span>
               </Reveal>
             </div>
           </div>
           <div>
             <Reveal className="mb-9 border-t pt-[22px] text-[11px] tracking-[0.32em] text-stone uppercase [border-color:rgba(25,20,16,0.15)]">
-              05 — Ghé quán · Hai cơ sở tại Huế
+              {t.visitLabel}
             </Reveal>
             <div className="mb-9 grid grid-cols-2 gap-7">
               <Reveal>
                 <div className="mb-3.5 flex items-center gap-2.5">
                   <span className="font-display text-[10px] font-semibold tracking-[0.24em] text-ember uppercase">
-                    Cơ sở 01
+                    {venueLabels[0]}
                   </span>
                   <span className="h-px flex-1 [background:rgba(25,20,16,0.15)]" />
                 </div>
@@ -265,7 +318,7 @@ export default function HomePage() {
               <Reveal>
                 <div className="mb-3.5 flex items-center gap-2.5">
                   <span className="font-display text-[10px] font-semibold tracking-[0.24em] text-ember uppercase">
-                    Cơ sở 02
+                    {venueLabels[1]}
                   </span>
                   <span className="h-px flex-1 [background:rgba(25,20,16,0.15)]" />
                 </div>
@@ -276,14 +329,15 @@ export default function HomePage() {
                 </div>
               </Reveal>
             </div>
-            <Reveal className="flex justify-between border-b px-0.5 py-4 text-sm [border-color:rgba(25,20,16,0.12)]">
-              <span className="text-stone">Thứ 2 – Thứ 6</span>
-              <span>10:00 – 22:00</span>
-            </Reveal>
-            <Reveal className="flex justify-between border-b px-0.5 py-4 text-sm [border-color:rgba(25,20,16,0.12)]">
-              <span className="text-stone">Thứ 7 – Chủ nhật</span>
-              <span>09:00 – 22:30</span>
-            </Reveal>
+            {hours.map((h, i) => (
+              <Reveal
+                key={i}
+                className="flex justify-between border-b px-0.5 py-4 text-sm [border-color:rgba(25,20,16,0.12)]"
+              >
+                <span className="text-stone">{h.days}</span>
+                <span>{h.time}</span>
+              </Reveal>
+            ))}
             <Reveal className="mt-8 flex flex-wrap gap-7">
               <a
                 href={PHONE_TEL}
@@ -292,10 +346,10 @@ export default function HomePage() {
                 {PHONE_DISPLAY}
               </a>
               <Link
-                href="/lien-he"
+                href={ROUTES.contact[locale]}
                 className="border-b border-ink pb-1 text-[13px] tracking-[0.14em] text-ink uppercase transition-colors duration-[250ms] hover:border-ember hover:text-ember"
               >
-                Bản đồ cả 2 cơ sở →
+                {t.mapAll}
               </Link>
             </Reveal>
           </div>
@@ -305,13 +359,13 @@ export default function HomePage() {
       {/* ---------- MENU TEASER ---------- */}
       <section className="mx-auto max-w-[1360px] px-5 md:px-10 pb-[96px] md:pb-[140px]">
         <Reveal className="mb-11 border-t pt-[22px] text-[11px] tracking-[0.32em] text-stone uppercase [border-color:rgba(25,20,16,0.15)]">
-          06 — Thực đơn
+          {t.teaserLabel}
         </Reveal>
         <div className="flex flex-col">
           {teaserGroups.map((g) => (
             <Reveal key={g.id}>
               <Link
-                href="/menu"
+                href={ROUTES.menu[locale]}
                 className="grid grid-cols-[40px_1fr_auto] md:grid-cols-[60px_1fr_auto] items-baseline gap-6 border-b px-0.5 py-6 transition-[padding] duration-[250ms] hover:pl-3 [border-color:rgba(25,20,16,0.12)]"
               >
                 <span className="text-[11px] tracking-[0.2em] text-stone">
@@ -321,7 +375,7 @@ export default function HomePage() {
                   {g.name}
                 </span>
                 <span className="text-xs tracking-[0.16em] text-stone uppercase">
-                  {g.count} món
+                  {g.count} {t.dishes}
                 </span>
               </Link>
             </Reveal>

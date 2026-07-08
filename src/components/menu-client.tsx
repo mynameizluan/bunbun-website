@@ -3,28 +3,52 @@
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import { Reveal } from "@/components/motion/reveal";
-import {
-  BUNBUN_MENU,
-  formatPrice,
-  menuImageFor,
-  slugify,
-} from "@/data/menu";
+import { localizeMenu, formatPrice } from "@/data/menu";
 import { ORDER_URL, FACEBOOK_URL } from "@/lib/constants";
+import type { Locale } from "@/lib/i18n";
 
-export function MenuClient() {
+const COPY = {
+  vi: {
+    eyebrow: "Thực đơn · Burger đồng giá 43K",
+    h1Head: "Thực đơn ",
+    h1Italic: "Bunbun.",
+    all: "Tất cả",
+    ready: "Sẵn sàng gọi món?",
+    orderNow: "Đặt hàng ngay",
+    seasonalPre: "✳ Ngoài thực đơn cố định, Bunbun còn có ",
+    seasonalItalic: "món theo mùa",
+    seasonalMid: " — xuất hiện một quãng ngắn rồi thôi. Theo dõi ",
+    seasonalPost: " để không bỏ lỡ.",
+  },
+  en: {
+    eyebrow: "Menu · Burgers all at 43K",
+    h1Head: "The Bunbun ",
+    h1Italic: "menu.",
+    all: "All",
+    ready: "Ready to order?",
+    orderNow: "Order now",
+    seasonalPre: "✳ Beyond the fixed menu, Bunbun also cooks ",
+    seasonalItalic: "seasonal specials",
+    seasonalMid: " — around for a short while, then gone. Follow ",
+    seasonalPost: " so you don’t miss them.",
+  },
+} as const;
+
+export function MenuClient({ locale }: { locale: Locale }) {
+  const t = COPY[locale];
   const [filter, setFilter] = useState<string>("all");
 
+  const menu = useMemo(() => localizeMenu(locale), [locale]);
   const chips = useMemo(
     () => [
-      { id: "all", name: "Tất cả" },
-      ...BUNBUN_MENU.groups.map((g) => ({ id: g.id, name: g.name })),
+      { id: "all", name: t.all },
+      ...menu.map((g) => ({ id: g.id, name: g.name })),
     ],
-    []
+    [menu, t.all]
   );
-
   const groups = useMemo(
-    () => BUNBUN_MENU.groups.filter((g) => filter === "all" || g.id === filter),
-    [filter]
+    () => menu.filter((g) => filter === "all" || g.id === filter),
+    [menu, filter]
   );
 
   return (
@@ -33,17 +57,16 @@ export function MenuClient() {
         <div className="mb-8 flex items-center gap-3.5">
           <span className="h-1.5 w-1.5 rounded-full bg-ember" />
           <span className="text-[11px] tracking-[0.32em] uppercase">
-            Thực đơn · Burger đồng giá 43K
+            {t.eyebrow}
           </span>
         </div>
         <h1 className="font-display text-[clamp(44px,6.5vw,92px)] leading-[1.02] font-normal tracking-[-0.03em]">
-          Thực đơn <span className="font-light text-ember italic">Bunbun.</span>
+          {t.h1Head}
+          <span className="font-light text-ember italic">{t.h1Italic}</span>
         </h1>
       </Reveal>
 
-      <div
-        className="sticky top-[64px] z-50 mb-10 -mx-5 flex gap-x-[22px] overflow-x-auto border-b bg-paper px-5 py-4 [border-color:rgba(25,20,16,0.15)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:top-[74px] md:mx-0 md:flex-wrap md:gap-x-[26px] md:gap-y-2 md:overflow-visible md:px-0"
-      >
+      <div className="sticky top-[64px] z-50 mb-10 -mx-5 flex gap-x-[22px] overflow-x-auto border-b bg-paper px-5 py-4 [border-color:rgba(25,20,16,0.15)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:top-[74px] md:mx-0 md:flex-wrap md:gap-x-[26px] md:gap-y-2 md:overflow-visible md:px-0">
         {chips.map((chip) => {
           const active = chip.id === filter;
           return (
@@ -75,46 +98,42 @@ export function MenuClient() {
               </div>
             </div>
             <div className="flex flex-col">
-              {group.items.map((item) => {
-                const slug = slugify(item.name);
-                const imgSrc = menuImageFor(slug);
-                return (
-                  <div
-                    key={item.name}
-                    className="grid grid-cols-[64px_1fr_auto] items-center gap-3.5 border-b px-0.5 py-5 sm:grid-cols-[88px_1fr_auto] sm:gap-[22px] [border-color:rgba(25,20,16,0.12)]"
-                  >
-                    <div className="relative h-[64px] w-[64px] overflow-hidden rounded bg-placeholder sm:h-[88px] sm:w-[88px]">
-                      {imgSrc ? (
-                        <Image
-                          src={imgSrc}
-                          alt={item.name}
-                          fill
-                          className="object-cover"
-                          sizes="88px"
-                        />
+              {group.items.map((item) => (
+                <div
+                  key={item.slug}
+                  className="grid grid-cols-[64px_1fr_auto] items-center gap-3.5 border-b px-0.5 py-5 sm:grid-cols-[88px_1fr_auto] sm:gap-[22px] [border-color:rgba(25,20,16,0.12)]"
+                >
+                  <div className="relative h-[64px] w-[64px] overflow-hidden rounded bg-placeholder sm:h-[88px] sm:w-[88px]">
+                    {item.imgSrc ? (
+                      <Image
+                        src={item.imgSrc}
+                        alt={item.name}
+                        fill
+                        className="object-cover"
+                        sizes="88px"
+                      />
+                    ) : null}
+                  </div>
+                  <div>
+                    <div className="flex flex-wrap items-baseline gap-3">
+                      <span className="font-display text-[17px] font-medium tracking-[-0.01em]">
+                        {item.name}
+                      </span>
+                      {item.tag ? (
+                        <span className="rounded-full border border-ember/40 px-2.5 py-0.5 text-[10px] tracking-[0.2em] text-ember uppercase">
+                          {item.tag}
+                        </span>
                       ) : null}
                     </div>
-                    <div>
-                      <div className="flex flex-wrap items-baseline gap-3">
-                        <span className="font-display text-[17px] font-medium tracking-[-0.01em]">
-                          {item.name}
-                        </span>
-                        {item.tag ? (
-                          <span className="rounded-full border border-ember/40 px-2.5 py-0.5 text-[10px] tracking-[0.2em] text-ember uppercase">
-                            {item.tag}
-                          </span>
-                        ) : null}
-                      </div>
-                      <div className="mt-1 text-[13.5px] leading-[1.6] text-stone">
-                        {item.desc}
-                      </div>
-                    </div>
-                    <div className="font-display text-base font-medium whitespace-nowrap">
-                      {formatPrice(item.price)}
+                    <div className="mt-1 text-[13.5px] leading-[1.6] text-stone">
+                      {item.desc}
                     </div>
                   </div>
-                );
-              })}
+                  <div className="font-display text-base font-medium whitespace-nowrap">
+                    {formatPrice(item.price)}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </Reveal>
@@ -122,7 +141,7 @@ export function MenuClient() {
 
       <Reveal className="flex flex-wrap items-center justify-between gap-6 border-t pt-12 [border-color:rgba(25,20,16,0.15)]">
         <p className="font-display text-[clamp(22px,2.6vw,32px)] font-normal tracking-[-0.02em]">
-          Sẵn sàng gọi món?
+          {t.ready}
         </p>
         <a
           href={ORDER_URL}
@@ -130,13 +149,13 @@ export function MenuClient() {
           rel="noopener"
           className="rounded-full bg-ember px-[30px] py-4 font-display text-xs font-semibold tracking-[0.18em] text-white uppercase transition-colors duration-[250ms] hover:bg-ember-deep"
         >
-          Đặt hàng ngay
+          {t.orderNow}
         </a>
       </Reveal>
       <p className="mt-7 max-w-[64ch] text-[13px] leading-[1.7] text-stone">
-        ✳ Ngoài thực đơn cố định, Bunbun còn có{" "}
-        <span className="text-ember italic">món theo mùa</span> — xuất hiện
-        một quãng ngắn rồi thôi. Theo dõi{" "}
+        {t.seasonalPre}
+        <span className="text-ember italic">{t.seasonalItalic}</span>
+        {t.seasonalMid}
         <a
           href={FACEBOOK_URL}
           target="_blank"
@@ -144,8 +163,8 @@ export function MenuClient() {
           className="border-b border-current"
         >
           Facebook
-        </a>{" "}
-        để không bỏ lỡ.
+        </a>
+        {t.seasonalPost}
       </p>
     </main>
   );

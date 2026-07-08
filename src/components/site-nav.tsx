@@ -4,10 +4,51 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { NAV_LINKS, ORDER_URL, PHONE_DISPLAY, PHONE_TEL } from "@/lib/constants";
+import { ORDER_URL, PHONE_DISPLAY, PHONE_TEL } from "@/lib/constants";
 import { asset } from "@/lib/asset";
+import {
+  NAV_LABELS,
+  ROUTES,
+  switchLocalePath,
+  type Locale,
+  type RouteKey,
+} from "@/lib/i18n";
 
-export function SiteNav() {
+const ORDER_LABEL: Record<Locale, string> = { vi: "Đặt hàng", en: "Order" };
+const ORDER_NOW: Record<Locale, string> = {
+  vi: "Đặt hàng ngay",
+  en: "Order now",
+};
+
+const ROUTE_KEYS: RouteKey[] = ["home", "menu", "about", "contact"];
+
+function LocaleSwitch({
+  locale,
+  pathname,
+  className = "",
+}: {
+  locale: Locale;
+  pathname: string;
+  className?: string;
+}) {
+  const other: Locale = locale === "vi" ? "en" : "vi";
+  return (
+    <span
+      className={`flex items-center gap-2 text-[12px] tracking-[0.14em] uppercase ${className}`}
+    >
+      <span className="font-semibold text-ink">{locale}</span>
+      <span className="text-stone">/</span>
+      <Link
+        href={switchLocalePath(pathname, other)}
+        className="text-stone transition-colors duration-[250ms] hover:text-ember"
+      >
+        {other}
+      </Link>
+    </span>
+  );
+}
+
+export function SiteNav({ locale }: { locale: Locale }) {
   const pathname = usePathname();
   const [solid, setSolid] = useState(false);
   const [open, setOpen] = useState(false);
@@ -48,7 +89,10 @@ export function SiteNav() {
         }}
       >
         <nav className="mx-auto flex max-w-[1360px] items-center gap-5 px-5 py-4 md:px-10 md:py-5">
-          <Link href="/" className="flex shrink-0 items-center gap-3">
+          <Link
+            href={ROUTES.home[locale]}
+            className="flex shrink-0 items-center gap-3"
+          >
             <Image
               src={asset("/logo.png")}
               alt="Bunbun Burger — logo mèo burger"
@@ -63,29 +107,31 @@ export function SiteNav() {
 
           {/* Desktop */}
           <div className="ml-auto hidden items-center gap-[34px] md:flex">
-            {NAV_LINKS.map((link) => {
-              const active = pathname === link.href;
+            {ROUTE_KEYS.map((key) => {
+              const href = ROUTES[key][locale];
+              const active = pathname === href;
               return (
                 <Link
-                  key={link.href}
-                  href={link.href}
+                  key={key}
+                  href={href}
                   className="text-[13px] tracking-[0.1em] uppercase transition-colors duration-[250ms]"
                   style={{
                     fontWeight: active ? 600 : 400,
                     color: active ? "var(--color-ember)" : "var(--color-ink)",
                   }}
                 >
-                  {link.label}
+                  {NAV_LABELS[locale][key]}
                 </Link>
               );
             })}
+            <LocaleSwitch locale={locale} pathname={pathname} />
             <a
               href={ORDER_URL}
               target="_blank"
               rel="noopener"
               className="rounded-full border border-ink px-6 py-3 font-display text-xs font-semibold tracking-[0.18em] uppercase transition-all duration-[250ms] hover:bg-ink hover:text-paper"
             >
-              Đặt hàng
+              {ORDER_LABEL[locale]}
             </a>
           </div>
 
@@ -101,9 +147,7 @@ export function SiteNav() {
               <span
                 className="absolute left-0 top-0 h-px w-full bg-ink transition-transform duration-300"
                 style={{
-                  transform: open
-                    ? "translateY(7px) rotate(45deg)"
-                    : "none",
+                  transform: open ? "translateY(7px) rotate(45deg)" : "none",
                 }}
               />
               <span
@@ -113,9 +157,7 @@ export function SiteNav() {
               <span
                 className="absolute left-0 bottom-0 h-px w-full bg-ink transition-transform duration-300"
                 style={{
-                  transform: open
-                    ? "translateY(-6px) rotate(-45deg)"
-                    : "none",
+                  transform: open ? "translateY(-6px) rotate(-45deg)" : "none",
                 }}
               />
             </span>
@@ -133,12 +175,13 @@ export function SiteNav() {
         aria-hidden={!open}
       >
         <div className="flex flex-col border-t [border-color:rgba(25,20,16,0.15)]">
-          {NAV_LINKS.map((link, i) => {
-            const active = pathname === link.href;
+          {ROUTE_KEYS.map((key, i) => {
+            const href = ROUTES[key][locale];
+            const active = pathname === href;
             return (
               <Link
-                key={link.href}
-                href={link.href}
+                key={key}
+                href={href}
                 className="grid grid-cols-[36px_1fr] items-baseline border-b py-5 [border-color:rgba(25,20,16,0.12)]"
                 onClick={() => setOpen(false)}
               >
@@ -153,11 +196,19 @@ export function SiteNav() {
                     fontWeight: active ? 300 : 400,
                   }}
                 >
-                  {link.label}
+                  {NAV_LABELS[locale][key]}
                 </span>
               </Link>
             );
           })}
+        </div>
+
+        <div className="mt-6">
+          <LocaleSwitch
+            locale={locale}
+            pathname={pathname}
+            className="text-[14px]"
+          />
         </div>
 
         <div className="mt-auto flex flex-col gap-5">
@@ -173,7 +224,7 @@ export function SiteNav() {
             rel="noopener"
             className="rounded-full bg-ember px-[30px] py-4 text-center font-display text-xs font-semibold tracking-[0.18em] text-white uppercase transition-colors duration-[250ms] hover:bg-ember-deep"
           >
-            Đặt hàng ngay
+            {ORDER_NOW[locale]}
           </a>
         </div>
       </div>

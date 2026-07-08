@@ -1,25 +1,9 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Be_Vietnam_Pro } from "next/font/google";
-import "./globals.css";
+import "../globals.css";
+import { fontClass } from "@/lib/fonts";
 import { SiteNav } from "@/components/site-nav";
 import { SiteFooter } from "@/components/site-footer";
 import { RestaurantJsonLd } from "@/components/restaurant-json-ld";
-
-const jakarta = Plus_Jakarta_Sans({
-  variable: "--font-jakarta",
-  subsets: ["latin", "vietnamese"],
-  weight: ["300", "400", "500", "600", "700"],
-  style: ["normal", "italic"],
-  display: "swap",
-});
-
-const vietnamPro = Be_Vietnam_Pro({
-  variable: "--font-vietnam",
-  subsets: ["latin", "vietnamese"],
-  weight: ["300", "400", "500", "600"],
-  style: ["normal", "italic"],
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://bunbunburger.vn"),
@@ -53,12 +37,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="vi" className={`${jakarta.variable} ${vietnamPro.variable}`}>
+    <html lang="vi" className={fontClass}>
       <body className="bg-paper text-ink font-body font-light antialiased">
         <RestaurantJsonLd />
-        <SiteNav />
+        <SiteNav locale="vi" />
         {children}
-        <SiteFooter />
+        <SiteFooter locale="vi" />
       </body>
     </html>
   );

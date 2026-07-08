@@ -11,8 +11,12 @@ export const metadata: Metadata = {
       "Burger đồng giá 43.000đ, combo, khoai tây thủ công và nhiều món khác tại Bunbun Burger Huế.",
     images: ["/hero-banner-clean.png"],
   },
+  alternates: {
+    canonical: "/menu",
+    languages: { vi: "/menu", en: "/en/menu", "x-default": "/menu" },
+  },
 };
 
 export default function MenuPage() {
-  return <MenuClient />;
+  return <MenuClient locale="vi" />;
 }
