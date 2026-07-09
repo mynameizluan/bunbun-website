@@ -3,7 +3,10 @@
 /**
  * Bunbun Dashboard — CMS kiểu Git, không cần server.
  * Sửa nội dung → commit vào GitHub → Actions tự build + deploy (~2 phút).
- * Đăng nhập bằng GitHub Personal Access Token (scope: repo), lưu localStorage.
+ * Đăng nhập: thiết lập 1 lần bằng GitHub token + mật khẩu tự đặt;
+ * token được mã hoá AES-GCM (khoá dẫn xuất PBKDF2 từ mật khẩu) lưu localStorage —
+ * từ đó về sau chỉ cần gõ mật khẩu. GitHub không cho đăng nhập API bằng
+ * username/password nên đây là cách gần nhất và an toàn hơn lưu token thô.
  */
 
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -12,7 +15,57 @@ const REPO = "mynameizluan/bunbun-website";
 const BRANCH = "main";
 const CONTENT_PATH = "src/data/site-content.json";
 const RAW_BASE = `https://raw.githubusercontent.com/${REPO}/${BRANCH}/public`;
-const TOKEN_KEY = "bunbun-admin-gh-token";
+const VAULT_KEY = "bunbun-admin-vault";
+const LEGACY_TOKEN_KEY = "bunbun-admin-gh-token";
+
+/* ---------- mã hoá token bằng mật khẩu ---------- */
+function b64(bytes: Uint8Array): string {
+  let bin = "";
+  bytes.forEach((b) => (bin += String.fromCharCode(b)));
+  return btoa(bin);
+}
+function unb64(s: string): Uint8Array {
+  return Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+}
+async function deriveKey(password: string, salt: Uint8Array): Promise<CryptoKey> {
+  const raw = await crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(password),
+    "PBKDF2",
+    false,
+    ["deriveKey"]
+  );
+  return crypto.subtle.deriveKey(
+    { name: "PBKDF2", salt: salt as BufferSource, iterations: 310000, hash: "SHA-256" },
+    raw,
+    { name: "AES-GCM", length: 256 },
+    false,
+    ["encrypt", "decrypt"]
+  );
+}
+async function encryptToken(token: string, password: string): Promise<string> {
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const key = await deriveKey(password, salt);
+  const ct = new Uint8Array(
+    await crypto.subtle.encrypt(
+      { name: "AES-GCM", iv: iv as BufferSource },
+      key,
+      new TextEncoder().encode(token)
+    )
+  );
+  return JSON.stringify({ s: b64(salt), i: b64(iv), c: b64(ct) });
+}
+async function decryptToken(vault: string, password: string): Promise<string> {
+  const { s, i, c } = JSON.parse(vault);
+  const key = await deriveKey(password, unb64(s));
+  const pt = await crypto.subtle.decrypt(
+    { name: "AES-GCM", iv: unb64(i) as BufferSource },
+    key,
+    unb64(c) as BufferSource
+  );
+  return new TextDecoder().decode(pt);
+}
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type Content = any;
@@ -123,7 +176,10 @@ const ASSET_DEFS = [
 ] as const;
 
 export default function AdminPage() {
-  const [token, setToken] = useState("");
+  const tokenRef = useRef("");
+  const [authMode, setAuthMode] = useState<"loading" | "setup" | "login">("loading");
+  const [password, setPassword] = useState("");
+  const [patInput, setPatInput] = useState("");
   const [authed, setAuthed] = useState(false);
   const [content, setContent] = useState<Content>(null);
   const shaRef = useRef<string>("");
@@ -137,59 +193,100 @@ export default function AdminPage() {
   const [cname, setCname] = useState<{ value: string; sha: string } | null>(null);
   const [domainInput, setDomainInput] = useState("");
 
-  const gh = useCallback(
-    async (path: string, init?: RequestInit) => {
-      const res = await fetch(`https://api.github.com${path}`, {
-        ...init,
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/vnd.github+json",
-          ...(init?.headers || {}),
-        },
-      });
-      if (!res.ok && res.status !== 404)
-        throw new Error(`GitHub ${res.status}: ${(await res.text()).slice(0, 200)}`);
-      return res;
-    },
-    [token]
-  );
+  const gh = useCallback(async (path: string, init?: RequestInit) => {
+    const res = await fetch(`https://api.github.com${path}`, {
+      ...init,
+      headers: {
+        Authorization: `Bearer ${tokenRef.current}`,
+        Accept: "application/vnd.github+json",
+        ...(init?.headers || {}),
+      },
+    });
+    if (!res.ok && res.status !== 404)
+      throw new Error(`GitHub ${res.status}: ${(await res.text()).slice(0, 200)}`);
+    return res;
+  }, []);
 
   /* ---------- load ---------- */
   const loadAll = useCallback(async () => {
-    setBusy("Đang tải nội dung…");
-    try {
-      const res = await gh(`/repos/${REPO}/contents/${CONTENT_PATH}?ref=${BRANCH}`);
-      if (res.status === 404) throw new Error("Không tìm thấy site-content.json");
-      const data = await res.json();
-      shaRef.current = data.sha;
-      const parsed = JSON.parse(decodeUtf8(data.content));
-      setContent(parsed);
-      setDomainInput(parsed.domain || "");
-      const cres = await gh(`/repos/${REPO}/contents/CNAME?ref=${BRANCH}`);
-      if (cres.status === 404) setCname(null);
-      else {
-        const c = await cres.json();
-        setCname({ value: decodeUtf8(c.content).trim(), sha: c.sha });
-      }
-      setAuthed(true);
-      localStorage.setItem(TOKEN_KEY, token);
-      setMsg("");
-    } catch (e) {
-      setMsg(`Lỗi: ${e instanceof Error ? e.message : e}`);
-      setAuthed(false);
-    } finally {
-      setBusy("");
+    const res = await gh(`/repos/${REPO}/contents/${CONTENT_PATH}?ref=${BRANCH}`);
+    if (res.status === 404) throw new Error("Không tìm thấy site-content.json");
+    const data = await res.json();
+    shaRef.current = data.sha;
+    const parsed = JSON.parse(decodeUtf8(data.content));
+    setContent(parsed);
+    setDomainInput(parsed.domain || "");
+    const cres = await gh(`/repos/${REPO}/contents/CNAME?ref=${BRANCH}`);
+    if (cres.status === 404) setCname(null);
+    else {
+      const c = await cres.json();
+      setCname({ value: decodeUtf8(c.content).trim(), sha: c.sha });
     }
-  }, [gh, token]);
+    setAuthed(true);
+    setMsg("");
+  }, [gh]);
 
   useEffect(() => {
-    // đọc token đã lưu sau khi hydrate (setTimeout để tránh setState đồng bộ trong effect)
+    localStorage.removeItem(LEGACY_TOKEN_KEY); // dọn token thô của bản cũ
     const id = setTimeout(() => {
-      const saved = localStorage.getItem(TOKEN_KEY);
-      if (saved) setToken(saved);
+      setAuthMode(localStorage.getItem(VAULT_KEY) ? "login" : "setup");
     }, 0);
     return () => clearTimeout(id);
   }, []);
+
+  /* ---------- auth handlers ---------- */
+  async function handleSetup() {
+    if (patInput.trim().length < 20) {
+      setMsg("Token không hợp lệ.");
+      return;
+    }
+    if (password.length < 8) {
+      setMsg("Mật khẩu cần tối thiểu 8 ký tự.");
+      return;
+    }
+    setBusy("Đang kiểm tra token…");
+    try {
+      tokenRef.current = patInput.trim();
+      await loadAll(); // token sai sẽ ném lỗi ở đây
+      localStorage.setItem(VAULT_KEY, await encryptToken(tokenRef.current, password));
+      setPatInput("");
+      setPassword("");
+    } catch (e) {
+      tokenRef.current = "";
+      setAuthed(false);
+      setMsg(`Lỗi: ${e instanceof Error ? e.message : e}`);
+    } finally {
+      setBusy("");
+    }
+  }
+
+  async function handleLogin() {
+    setBusy("Đang mở khoá…");
+    try {
+      const vault = localStorage.getItem(VAULT_KEY);
+      if (!vault) {
+        setAuthMode("setup");
+        return;
+      }
+      tokenRef.current = await decryptToken(vault, password);
+      await loadAll();
+      setPassword("");
+    } catch (e) {
+      tokenRef.current = "";
+      setAuthed(false);
+      const isDecrypt = e instanceof DOMException || e instanceof SyntaxError;
+      setMsg(isDecrypt ? "Sai mật khẩu." : `Lỗi: ${e instanceof Error ? e.message : e}`);
+    } finally {
+      setBusy("");
+    }
+  }
+
+  function resetVault() {
+    localStorage.removeItem(VAULT_KEY);
+    setPassword("");
+    setMsg("");
+    setAuthMode("setup");
+  }
 
   /* ---------- helpers ---------- */
   function update(fn: (draft: Content) => void) {
@@ -376,27 +473,76 @@ export default function AdminPage() {
 
   /* ---------- login gate ---------- */
   if (!authed) {
+    const inputCls =
+      "mb-4 w-full rounded border border-ink/20 bg-white px-4 py-3 text-sm focus:border-ember focus:outline-none";
     return (
       <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-6">
         <h1 className="mb-2 font-display text-3xl font-normal tracking-[-0.02em]">
           Bunbun <span className="text-ember italic">Dashboard</span>
         </h1>
-        <p className="mb-8 text-sm leading-relaxed text-body">
-          Quản lý nội dung website. Dán GitHub Personal Access Token (quyền{" "}
-          <code className="rounded bg-ink/5 px-1">repo</code>) để đăng nhập —
-          tạo tại GitHub → Settings → Developer settings → Tokens (classic).
-        </p>
-        <input
-          type="password"
-          placeholder="ghp_…"
-          value={token}
-          onChange={(e) => setToken(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && token && loadAll()}
-          className="mb-4 w-full rounded border border-ink/20 bg-white px-4 py-3 text-sm focus:border-ember focus:outline-none"
-        />
-        <Btn onClick={loadAll} disabled={!token || !!busy}>
-          {busy || "Đăng nhập"}
-        </Btn>
+
+        {authMode === "login" && (
+          <>
+            <p className="mb-8 text-sm leading-relaxed text-body">
+              Nhập mật khẩu để mở khoá dashboard trên máy này.
+            </p>
+            <input
+              type="password"
+              placeholder="Mật khẩu"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && password && handleLogin()}
+              className={inputCls}
+              autoFocus
+            />
+            <Btn onClick={handleLogin} disabled={!password || !!busy}>
+              {busy || "Đăng nhập"}
+            </Btn>
+            <button
+              onClick={resetVault}
+              className="mt-5 self-start text-xs tracking-[0.1em] text-stone uppercase underline-offset-2 hover:text-ember hover:underline"
+            >
+              Quên mật khẩu? Thiết lập lại bằng GitHub token
+            </button>
+          </>
+        )}
+
+        {authMode === "setup" && (
+          <>
+            <p className="mb-8 text-sm leading-relaxed text-body">
+              Thiết lập một lần cho máy này: dán GitHub Personal Access Token
+              (quyền <code className="rounded bg-ink/5 px-1">repo</code>, tạo
+              tại GitHub → Settings → Developer settings → Tokens) và tự đặt
+              mật khẩu. Từ lần sau chỉ cần gõ mật khẩu — token được mã hoá
+              lưu ngay trên máy, không gửi đi đâu ngoài GitHub.
+            </p>
+            <input
+              type="password"
+              placeholder="GitHub token (ghp_…)"
+              value={patInput}
+              onChange={(e) => setPatInput(e.target.value)}
+              className={inputCls}
+            />
+            <input
+              type="password"
+              placeholder="Đặt mật khẩu dashboard (≥ 8 ký tự)"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={(e) =>
+                e.key === "Enter" && patInput && password && handleSetup()
+              }
+              className={inputCls}
+            />
+            <Btn onClick={handleSetup} disabled={!patInput || !password || !!busy}>
+              {busy || "Thiết lập & Đăng nhập"}
+            </Btn>
+          </>
+        )}
+
+        {authMode === "loading" && (
+          <p className="text-sm text-stone">Đang tải…</p>
+        )}
+
         {msg ? <p className="mt-4 text-sm text-red-700">{msg}</p> : null}
       </main>
     );
@@ -417,10 +563,7 @@ export default function AdminPage() {
           </Btn>
           <Btn
             kind="ghost"
-            onClick={() => {
-              localStorage.removeItem(TOKEN_KEY);
-              location.reload();
-            }}
+            onClick={() => location.reload()}
           >
             Thoát
           </Btn>
