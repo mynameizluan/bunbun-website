@@ -1,14 +1,13 @@
 import type { Metadata } from "next";
+import content from "@/data/site-content.json";
 import { MenuClient } from "@/components/menu-client";
 
 export const metadata: Metadata = {
-  title: "Thực đơn",
-  description:
-    "Thực đơn Bunbun Burger — burger đồng giá 43.000đ, combo, khoai tây thủ công, salad, tráng miệng và trà. Burger Huế thủ công, đặt hàng qua iPOS.",
+  title: content.seo.menu.vi.title,
+  description: content.seo.menu.vi.description,
   openGraph: {
-    title: "Thực đơn · Bunbun Burger",
-    description:
-      "Burger đồng giá 43.000đ, combo, khoai tây thủ công và nhiều món khác tại Bunbun Burger Huế.",
+    title: content.seo.menu.vi.title,
+    description: content.seo.menu.vi.description,
     images: ["/hero-banner-clean.png"],
   },
   alternates: {

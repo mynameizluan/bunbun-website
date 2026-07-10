@@ -1,14 +1,13 @@
 import type { Metadata } from "next";
+import content from "@/data/site-content.json";
 import { AboutPage } from "@/components/pages/about";
 
 export const metadata: Metadata = {
-  title: "About us",
-  description:
-    "Bunbun Burger began behind an open kitchen counter at 39A Bến Nghé, Huế — handcrafted burgers, hand-cut fries, house sauces.",
+  title: content.seo.about.en.title,
+  description: content.seo.about.en.description,
   openGraph: {
-    title: "About us · Bunbun Burger",
-    description:
-      "Born in Huế, raised behind an open counter — the story of Bunbun Burger.",
+    title: content.seo.about.en.title,
+    description: content.seo.about.en.description,
     images: ["/hero-banner-clean.png"],
   },
   alternates: {

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { SITE_URL } from "@/lib/site";
+import content from "@/data/site-content.json";
 import "../globals.css";
 import { fontClass } from "@/lib/fonts";
 import { SiteNav } from "@/components/site-nav";
@@ -9,23 +10,22 @@ import { RestaurantJsonLd } from "@/components/restaurant-json-ld";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Bunbun Burger — Burger thủ công Made in Huế",
-    template: "%s · Bunbun Burger",
+    default: content.seo.home.vi.title,
+    template: `%s · ${content.brand.name}`,
   },
-  description:
-    "Bunbun Burger — burger thủ công Made in Huế. Bánh ủ mềm, khoai tây cắt tay chiên thủ công, xốt nêm theo khẩu vị Huế. Đồng giá 43.000đ.",
+  description: content.seo.home.vi.description,
   openGraph: {
     type: "website",
     locale: "vi_VN",
     siteName: "Bunbun Burger",
-    title: "Bunbun Burger — Burger thủ công Made in Huế",
+    title: content.seo.home.vi.title,
     description:
       "Burger thủ công Made in Huế. Đồng giá 43.000đ. Đặt hàng qua iPOS, ShopeeFood.",
     images: ["/hero-banner-clean.png"],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Bunbun Burger — Burger thủ công Made in Huế",
+    title: content.seo.home.vi.title,
     description:
       "Burger thủ công Made in Huế. Đồng giá 43.000đ. Đặt hàng qua iPOS, ShopeeFood.",
     images: ["/hero-banner-clean.png"],

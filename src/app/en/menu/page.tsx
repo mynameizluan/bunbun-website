@@ -1,14 +1,13 @@
 import type { Metadata } from "next";
+import content from "@/data/site-content.json";
 import { MenuClient } from "@/components/menu-client";
 
 export const metadata: Metadata = {
-  title: "Menu",
-  description:
-    "Bunbun Burger menu — burgers all at 43,000đ, combos, hand-cut fries, salads, desserts and tea. Handcrafted in Huế, order via iPOS.",
+  title: content.seo.menu.en.title,
+  description: content.seo.menu.en.description,
   openGraph: {
-    title: "Menu · Bunbun Burger",
-    description:
-      "Burgers all at 43,000đ, combos, hand-cut fries and more at Bunbun Burger, Huế.",
+    title: content.seo.menu.en.title,
+    description: content.seo.menu.en.description,
     images: ["/hero-banner-clean.png"],
   },
   alternates: {

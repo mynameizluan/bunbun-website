@@ -1,5 +1,49 @@
 {
   "domain": "",
+  "brand": { "name": "Bunbun Burger" },
+  "stats": { "s1": "43K", "s2": "35", "s3": "Huế" },
+  "seo": {
+    "home": {
+      "vi": {
+        "title": "Bunbun Burger — Burger thủ công Made in Huế",
+        "description": "Một chiếc burger, làm chậm rãi như một món Huế. Bánh ủ mềm, khoai tây cắt tay chiên thủ công, xốt nêm theo khẩu vị Huế. Đồng giá 43.000đ, 2 cơ sở tại Huế."
+      },
+      "en": {
+        "title": "Bunbun Burger — Handcrafted Burgers Made in Huế",
+        "description": "One burger, made slowly — like a dish from Huế. Soft-baked buns, hand-cut fries, house sauces. All burgers 43,000đ, two locations in Huế, Vietnam."
+      }
+    },
+    "menu": {
+      "vi": {
+        "title": "Thực đơn",
+        "description": "Thực đơn Bunbun Burger — burger đồng giá 43.000đ, combo, khoai tây thủ công, salad, tráng miệng và trà. Burger Huế thủ công, đặt hàng qua iPOS."
+      },
+      "en": {
+        "title": "Menu",
+        "description": "Bunbun Burger menu — burgers all at 43,000đ, combos, hand-cut fries, salads, desserts and tea. Handcrafted in Huế, order via iPOS."
+      }
+    },
+    "about": {
+      "vi": {
+        "title": "Về chúng tôi",
+        "description": "Bunbun Burger bắt đầu từ một quầy bếp mở nhỏ ở 39A Bến Nghé, Huế — burger thủ công, khoai tây cắt tay, xốt tự làm theo khẩu vị người Việt."
+      },
+      "en": {
+        "title": "About us",
+        "description": "Bunbun Burger began behind an open kitchen counter at 39A Bến Nghé, Huế — handcrafted burgers, hand-cut fries, house sauces."
+      }
+    },
+    "contact": {
+      "vi": {
+        "title": "Liên hệ",
+        "description": "Bunbun Burger — 2 cơ sở tại Huế: 39A Bến Nghé & 02 Đặng Thái Thân. Giờ mở cửa 10:00–22:00 (T2–T6), 09:00–22:30 (T7–CN). Hotline 079 928 9889."
+      },
+      "en": {
+        "title": "Contact",
+        "description": "Bunbun Burger — two locations in Huế: 39A Bến Nghé & 02 Đặng Thái Thân. Open 10:00–22:00 (Mon–Fri), 09:00–22:30 (Sat–Sun). Hotline 079 928 9889."
+      }
+    }
+  },
   "assets": {
     "logo": "/logo.png",
     "heroBanner": "/hero-banner-clean.png",
@@ -10,7 +54,9 @@
   "links": {
     "order": "https://order.ipos.vn/menu?pos_parent=BRAND-QR4Q&pos_id=130726&source=DEFAULT",
     "shopee": "https://shopeefood.vn/hue/bunbun-burger-39a-ben-nghe",
-    "facebook": "https://www.facebook.com/bunbunburger39"
+    "facebook": "https://www.facebook.com/bunbunburger39",
+    "grab": "",
+    "zalo": ""
   },
   "contact": {
     "phoneDisplay": "079 928 9889",
@@ -598,7 +644,8 @@
         "explore": "Khám phá",
         "orderCol": "Đặt món",
         "grabSoon": "GrabFood · sắp có",
-        "credit": "Thiết kế & vận hành tại Huế"
+        "credit": "Thiết kế & vận hành tại Huế",
+        "copyright": "Bunbun Burger — Made in Huế"
       },
       "en": {
         "bigHead": "Hungry?",
@@ -608,7 +655,8 @@
         "explore": "Explore",
         "orderCol": "Order",
         "grabSoon": "GrabFood · coming soon",
-        "credit": "Designed & run in Huế"
+        "credit": "Designed & run in Huế",
+        "copyright": "Bunbun Burger — Made in Huế"
       }
     }
   }

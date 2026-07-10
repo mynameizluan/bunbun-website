@@ -598,6 +598,41 @@ export default function AdminPage() {
       {/* ---------- TAB: MEDIA ---------- */}
       {tab === "media" && (
         <div className="grid gap-6 md:grid-cols-2">
+          {/* Favicon: file cố định src/app/icon.png, không qua JSON */}
+          <div className="rounded border border-ink/10 bg-white p-4">
+            <div className="mb-3 text-[11px] tracking-[0.14em] text-stone uppercase">
+              Favicon (biểu tượng tab trình duyệt, PNG vuông)
+            </div>
+            <div className="mb-3 flex h-36 items-center justify-center overflow-hidden rounded bg-placeholder">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={`https://raw.githubusercontent.com/${REPO}/${BRANCH}/src/app/icon.png`}
+                alt="Favicon"
+                className="h-16 w-16 object-contain"
+              />
+            </div>
+            <div className="mb-3 truncate text-xs text-stone">src/app/icon.png</div>
+            <Btn
+              kind="ghost"
+              disabled={!!busy}
+              onClick={() =>
+                pickFile("image/png", async (f) => {
+                  setBusy("Đang upload favicon…");
+                  try {
+                    await uploadFile(f, "src/app/icon.png");
+                    setMsg("Đã thay favicon — website tự build lại sau ~2 phút (không cần bấm Lưu).");
+                    pollDeploy();
+                  } catch (e) {
+                    setMsg(`Lỗi upload: ${e instanceof Error ? e.message : e}`);
+                  } finally {
+                    setBusy("");
+                  }
+                })
+              }
+            >
+              Thay favicon
+            </Btn>
+          </div>
           {ASSET_DEFS.map((a) => (
             <div key={a.key} className="rounded border border-ink/10 bg-white p-4">
               <div className="mb-3 text-[11px] tracking-[0.14em] text-stone uppercase">
@@ -635,6 +670,7 @@ export default function AdminPage() {
                 </option>
               ))}
               <option value="marquee">Dải chữ chạy (marquee)</option>
+              <option value="seo">SEO (tiêu đề & mô tả Google)</option>
             </select>
             <div className="flex overflow-hidden rounded-full border border-ink/20">
               {(["vi", "en"] as const).map((lc) => (
@@ -664,6 +700,34 @@ export default function AdminPage() {
                 />
               ))}
             </div>
+          ) : copySection === "seo" ? (
+            <div className="grid gap-6">
+              {(
+                [
+                  { key: "home", label: "Trang chủ" },
+                  { key: "menu", label: "Thực đơn" },
+                  { key: "about", label: "Về chúng tôi" },
+                  { key: "contact", label: "Liên hệ" },
+                ] as const
+              ).map((pg) => (
+                <div key={pg.key} className="rounded border border-ink/10 bg-white p-4">
+                  <div className="mb-3 font-display text-base">{pg.label}</div>
+                  <div className="grid gap-3">
+                    <Field
+                      label="Tiêu đề (thẻ title)"
+                      value={t.seo[pg.key][copyLocale].title}
+                      onChange={(v) => update((d) => (d.seo[pg.key][copyLocale].title = v))}
+                    />
+                    <Field
+                      label="Mô tả (meta description)"
+                      textarea
+                      value={t.seo[pg.key][copyLocale].description}
+                      onChange={(v) => update((d) => (d.seo[pg.key][copyLocale].description = v))}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
           ) : (
             <div className="grid gap-4 md:grid-cols-2">
               {Object.entries(t.copy[copySection][copyLocale]).map(([key, val]) => (
@@ -675,6 +739,18 @@ export default function AdminPage() {
                   onChange={(v) => update((d) => (d.copy[copySection][copyLocale][key] = v))}
                 />
               ))}
+            </div>
+          )}
+          {copySection === "about" && (
+            <div className="mt-6 rounded border border-ink/10 bg-white p-4">
+              <div className="mb-3 font-display text-base">
+                3 số liệu cuối trang (chung cho VI/EN — nhãn chữ sửa ở stat1/2/3 phía trên)
+              </div>
+              <div className="grid gap-3 md:grid-cols-3">
+                <Field label="Số liệu 1" value={t.stats.s1} onChange={(v) => update((d) => (d.stats.s1 = v))} />
+                <Field label="Số liệu 2" value={t.stats.s2} onChange={(v) => update((d) => (d.stats.s2 = v))} />
+                <Field label="Số liệu 3" value={t.stats.s3} onChange={(v) => update((d) => (d.stats.s3 = v))} />
+              </div>
             </div>
           )}
           <p className="mt-6 text-xs leading-relaxed text-stone">
@@ -712,6 +788,28 @@ export default function AdminPage() {
                       >
                         {it.img ? "Đổi ảnh" : "Thêm ảnh"}
                       </button>
+                      <label className="flex cursor-pointer items-center gap-1.5 text-xs text-stone-dark">
+                        <input
+                          type="checkbox"
+                          className="accent-[#FF5A1F]"
+                          checked={t.signatureSlugs.includes(slugifyVi(it.name))}
+                          onChange={(e) =>
+                            update((d) => {
+                              const slug = slugifyVi(it.name);
+                              if (e.target.checked) {
+                                if (d.signatureSlugs.length >= 4) {
+                                  setMsg("Trang chủ chỉ hiển thị 4 món signature — bỏ chọn một món khác trước.");
+                                  return;
+                                }
+                                d.signatureSlugs.push(slug);
+                              } else {
+                                d.signatureSlugs = d.signatureSlugs.filter((s: string) => s !== slug);
+                              }
+                            })
+                          }
+                        />
+                        Signature trang chủ ({t.signatureSlugs.length}/4)
+                      </label>
                     </div>
                     <Btn kind="danger" onClick={() => update((d) => d.menu.groups[gi].items.splice(ii, 1))}>
                       Xoá món
@@ -785,6 +883,10 @@ export default function AdminPage() {
             <Field label="iPOS Web Order" value={t.links.order} onChange={(v) => update((d) => (d.links.order = v))} />
             <Field label="ShopeeFood" value={t.links.shopee} onChange={(v) => update((d) => (d.links.shopee = v))} />
             <Field label="Facebook" value={t.links.facebook} onChange={(v) => update((d) => (d.links.facebook = v))} />
+            <Field label="GrabFood (để trống = hiện 'Sắp có')" value={t.links.grab ?? ""} onChange={(v) => update((d) => (d.links.grab = v))} />
+            <Field label="Zalo Mini App (để trống = hiện 'Sắp có')" value={t.links.zalo ?? ""} onChange={(v) => update((d) => (d.links.zalo = v))} />
+            <h2 className="mt-4 font-display text-lg">Thương hiệu</h2>
+            <Field label="Tên hiển thị (nav, footer, tiêu đề tab)" value={t.brand.name} onChange={(v) => update((d) => (d.brand.name = v))} />
           </div>
           <div className="flex flex-col gap-4">
             {t.contact.venues.map((v: any, vi: number) => (

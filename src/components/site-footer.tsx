@@ -53,14 +53,14 @@ export function SiteFooter({ locale }: { locale: Locale }) {
                 height={32}
                 className="block rounded-lg"
               />
-              <span className="font-display text-base font-semibold">
-                Bunbun Burger
-              </span>
+              <span className="font-display text-base font-semibold">{content.brand.name}</span>
             </div>
             <p className="max-w-[42ch] text-[13px] leading-[1.8] text-stone-dark">
               {t.tagline}
               <br />
-              39A Bến Nghé · 02 Đặng Thái Thân, TP. Huế
+              {content.contact.venues
+                .map((v) => v.addressLines.join(" ").replace(/,\s*$/, ""))
+                .join(" · ")}
               <br />
               Hotline:{" "}
               <a href={PHONE_TEL} className="text-paper">
@@ -117,13 +117,24 @@ export function SiteFooter({ locale }: { locale: Locale }) {
               >
                 Facebook
               </a>
-              <span className="opacity-45">{t.grabSoon}</span>
+              {content.links.grab ? (
+                <a
+                  href={content.links.grab}
+                  target="_blank"
+                  rel="noopener"
+                  className="transition-colors duration-[250ms] hover:text-ember"
+                >
+                  GrabFood
+                </a>
+              ) : (
+                <span className="opacity-45">{t.grabSoon}</span>
+              )}
             </div>
           </div>
         </div>
 
         <div className="mt-13 flex flex-wrap justify-between gap-3 border-t pt-6 text-[11px] tracking-[0.14em] text-stone-dark uppercase [border-color:rgba(251,247,242,0.12)]">
-          <span>© {new Date().getFullYear()} Bunbun Burger — Made in Huế</span>
+          <span>© {new Date().getFullYear()} {t.copyright}</span>
           <span>{t.credit}</span>
         </div>
       </div>

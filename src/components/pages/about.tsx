@@ -94,25 +94,19 @@ export function AboutPage({ locale }: { locale: Locale }) {
       <section className="mx-auto max-w-[1360px] px-5 md:px-10 pb-[150px]">
         <div className="grid grid-cols-1 gap-6 border-t pt-11 [border-color:rgba(25,20,16,0.15)] md:grid-cols-3">
           <Reveal>
-            <div className="font-display text-[clamp(40px,5vw,64px)] font-light tracking-[-0.03em]">
-              43K
-            </div>
+            <div className="font-display text-[clamp(40px,5vw,64px)] font-light tracking-[-0.03em]">{content.stats.s1}</div>
             <div className="mt-2 text-xs tracking-[0.18em] text-stone uppercase">
               {t.stat1}
             </div>
           </Reveal>
           <Reveal>
-            <div className="font-display text-[clamp(40px,5vw,64px)] font-light tracking-[-0.03em]">
-              35
-            </div>
+            <div className="font-display text-[clamp(40px,5vw,64px)] font-light tracking-[-0.03em]">{content.stats.s2}</div>
             <div className="mt-2 text-xs tracking-[0.18em] text-stone uppercase">
               {t.stat2}
             </div>
           </Reveal>
           <Reveal>
-            <div className="font-display text-[clamp(40px,5vw,64px)] font-light tracking-[-0.03em] text-ember">
-              Huế
-            </div>
+            <div className="font-display text-[clamp(40px,5vw,64px)] font-light tracking-[-0.03em] text-ember">{content.stats.s3}</div>
             <div className="mt-2 text-xs tracking-[0.18em] text-stone uppercase">
               {t.stat3}
             </div>

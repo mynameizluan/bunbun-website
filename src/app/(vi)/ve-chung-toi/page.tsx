@@ -1,14 +1,13 @@
 import type { Metadata } from "next";
+import content from "@/data/site-content.json";
 import { AboutPage } from "@/components/pages/about";
 
 export const metadata: Metadata = {
-  title: "Về chúng tôi",
-  description:
-    "Bunbun Burger bắt đầu từ một quầy bếp mở nhỏ ở 39A Bến Nghé, Huế — burger thủ công, khoai tây cắt tay, xốt tự làm theo khẩu vị người Việt.",
+  title: content.seo.about.vi.title,
+  description: content.seo.about.vi.description,
   openGraph: {
-    title: "Về chúng tôi · Bunbun Burger",
-    description:
-      "Sinh ra ở Huế, lớn lên từ quầy bếp mở — câu chuyện của Bunbun Burger.",
+    title: content.seo.about.vi.title,
+    description: content.seo.about.vi.description,
     images: ["/hero-banner-clean.png"],
   },
   alternates: {

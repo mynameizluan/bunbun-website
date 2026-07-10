@@ -101,9 +101,7 @@ export function SiteNav({ locale }: { locale: Locale }) {
               height={34}
               className="block rounded-[9px]"
             />
-            <span className="font-display text-base font-semibold tracking-[0.02em]">
-              Bunbun Burger
-            </span>
+            <span className="font-display text-base font-semibold tracking-[0.02em]">{content.brand.name}</span>
           </Link>
 
           {/* Desktop */}

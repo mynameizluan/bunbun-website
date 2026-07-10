@@ -222,22 +222,40 @@ export function HomePage({ locale }: { locale: Locale }) {
                   <span className="text-ember">→</span>
                 </a>
               </Reveal>
-              <Reveal className="flex items-center justify-between border-b px-0.5 py-5 text-[#B3A798] [border-color:rgba(25,20,16,0.12)]">
-                <span className="font-display text-lg font-medium">
-                  GrabFood
-                </span>
-                <span className="text-[11px] tracking-[0.2em] uppercase">
-                  {t.comingSoon}
-                </span>
-              </Reveal>
-              <Reveal className="flex items-center justify-between border-b px-0.5 py-5 text-[#B3A798] [border-color:rgba(25,20,16,0.12)]">
-                <span className="font-display text-lg font-medium">
-                  {t.zaloRow}
-                </span>
-                <span className="text-[11px] tracking-[0.2em] uppercase">
-                  {t.comingSoon}
-                </span>
-              </Reveal>
+              {(
+                [
+                  { label: "GrabFood", href: content.links.grab },
+                  { label: t.zaloRow, href: content.links.zalo },
+                ] as const
+              ).map((ch) =>
+                ch.href ? (
+                  <Reveal key={ch.label}>
+                    <a
+                      href={ch.href}
+                      target="_blank"
+                      rel="noopener"
+                      className="flex items-center justify-between border-b px-0.5 py-5 transition-[padding] duration-[250ms] hover:pl-2.5 [border-color:rgba(25,20,16,0.12)]"
+                    >
+                      <span className="font-display text-lg font-medium">
+                        {ch.label}
+                      </span>
+                      <span className="text-ember">→</span>
+                    </a>
+                  </Reveal>
+                ) : (
+                  <Reveal
+                    key={ch.label}
+                    className="flex items-center justify-between border-b px-0.5 py-5 text-[#B3A798] [border-color:rgba(25,20,16,0.12)]"
+                  >
+                    <span className="font-display text-lg font-medium">
+                      {ch.label}
+                    </span>
+                    <span className="text-[11px] tracking-[0.2em] uppercase">
+                      {t.comingSoon}
+                    </span>
+                  </Reveal>
+                )
+              )}
             </div>
           </div>
           <div>

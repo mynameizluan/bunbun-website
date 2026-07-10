@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
+import content from "@/data/site-content.json";
 import { HomePage } from "@/components/pages/home";
 
 export const metadata: Metadata = {
-  description:
-    "Một chiếc burger, làm chậm rãi như một món Huế. Bánh ủ mềm, khoai tây cắt tay chiên thủ công, xốt nêm theo khẩu vị Huế. Đồng giá 43.000đ, 2 cơ sở tại Huế.",
+  description: content.seo.home.vi.description,
   alternates: {
     canonical: "/",
     languages: { vi: "/", en: "/en", "x-default": "/" },
